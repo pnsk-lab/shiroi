@@ -1,0 +1,31 @@
+I/O List
+
+If the I/O port (3n-1) returns 0, card is not there.
+
+I/O port (3n-1) returns the card type.
+	Top 4 bits mean the card genre:
+		0x0: Video
+		0x1: Audio
+		0x2: Math
+	Bottom 4 bits mean the card type:
+		Video:
+			0x1: Video Mark I
+		Audio:
+			0x1: Sound Mark I
+		Math:
+			0x1: Math Mark I
+
+Video Mark I card maps itself to:
+	0: VDP address
+	1: VDP data
+	2: See above
+
+Sound Mark I card maps itself to:
+	3: PSG address
+	4: PSG data
+	5: See above
+
+Math Mark I card maps itself to:
+	6: AM9511 stack
+	7: AM9511 command
+	8: See above
