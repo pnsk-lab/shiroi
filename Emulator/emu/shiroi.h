@@ -7,6 +7,7 @@
 #include "z80.h"
 #include "ay38910.h"
 #include "tms9918.h"
+#include "mc6847.h"
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -16,6 +17,7 @@
 enum SHIROI_CARD {
 	SHIROI_VIDEO = 0x00,
 	SHIROI_VIDEO_MARK_I,
+	SHIROI_VIDEO_MARK_II,
 	SHIROI_SOUND = 0x10,
 	SHIROI_SOUND_MARK_I,
 	SHIROI_SYSTEM = 0x20,
@@ -24,10 +26,13 @@ enum SHIROI_CARD {
 };
 
 typedef struct {
-	uint32_t* fb;
+	uint32_t fb[800 * 600];
 	union {
 		VrEmuTms9918* vdp;
+		mc6847_t mc6847;
 	};
+	uint16_t vram_addr;
+	uint8_t vram[64 * 1024];
 	int width;
 	int height;
 	int tick;

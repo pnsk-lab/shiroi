@@ -3,6 +3,7 @@
 #include "shiroi.h"
 
 #include "card/shiroi_video_mk_i.h"
+#include "card/shiroi_video_mk_ii.h"
 #include "card/shiroi_sound_mk_i.h"
 #include "card/shiroi_math_mk_i.h"
 #include "card/shiroi_text_mk_i.h"
@@ -68,6 +69,8 @@ void shiroi_init_cards(shiroi_t* shiroi) {
 void shiroi_install(shiroi_t* shiroi, int slot, int card) {
 	if(card == SHIROI_VIDEO_MARK_I) {
 		shiroi_video_mk_i_install(shiroi, slot);
+	} else if(card == SHIROI_VIDEO_MARK_II) {
+		shiroi_video_mk_ii_install(shiroi, slot);
 	} else if(card == SHIROI_SOUND_MARK_I) {
 		shiroi_sound_mk_i_install(shiroi, slot);
 	} else if(card == SHIROI_MATH_MARK_I) {
@@ -113,6 +116,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 			if(shiroi->z80_pins & Z80_M1) {
 			} else {
 				shiroi_video_mk_i(shiroi);
+				shiroi_video_mk_ii(shiroi);
 				shiroi_sound_mk_i(shiroi);
 				shiroi_math_mk_i(shiroi);
 				shiroi_text_mk_i(shiroi);
@@ -120,6 +124,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 		}
 
 		shiroi_video_mk_i_tick(shiroi);
+		shiroi_video_mk_ii_tick(shiroi);
 		shiroi_sound_mk_i_tick(shiroi);
 		shiroi_math_mk_i_tick(shiroi);
 		shiroi_text_mk_i_tick(shiroi);

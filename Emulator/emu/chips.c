@@ -5,3 +5,4 @@
 #include "chips_common.h"
 #include "z80.h"
 #include "ay38910.h"
+#include "mc6847.h"

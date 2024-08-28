@@ -16,7 +16,6 @@ void shiroi_video_mk_i_install(shiroi_t* shiroi, int slot) {
 	shiroi->cards[slot].video.tick = 0;
 
 	shiroi->cards[slot].video.vdp = vrEmuTms9918New();
-	shiroi->cards[slot].video.fb = malloc(TMS9918_PIXELS_Y * TMS9918_PIXELS_X * sizeof(uint32_t));
 	int x, y;
 	for(y = 0; y < TMS9918_PIXELS_Y; y++) {
 		for(x = 0; x < TMS9918_PIXELS_X; x++) {

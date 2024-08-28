@@ -10,6 +10,7 @@ I/O port (3n-1) returns the card type.
 	Bottom 4 bits mean the card type:
 		Video:
 			0x1: Video Mark I
+			0x2: Video Mark II
 		Audio:
 			0x1: Sound Mark I
 		System:
@@ -19,6 +20,11 @@ I/O port (3n-1) returns the card type.
 Video Mark I card maps itself to:
 	0: VDP address
 	1: VDP data
+	2: See above
+
+Video Mark II card maps itself to:
+	0: VDG VRAM address
+	1: VDG VRAM data
 	2: See above
 
 Sound Mark I card maps itself to:

@@ -78,6 +78,9 @@ int main(int argc, char** argv) {
 							if(strcmp(line + j + 1, "video_mark_1") == 0) {
 								dev = SHIROI_VIDEO_MARK_I;
 								n = "Video Mark I";
+							} else if(strcmp(line + j + 1, "video_mark_2") == 0) {
+								dev = SHIROI_VIDEO_MARK_II;
+								n = "Video Mark II";
 							} else if(strcmp(line + j + 1, "sound_mark_1") == 0) {
 								dev = SHIROI_SOUND_MARK_I;
 								n = "Sound Mark I";
@@ -159,15 +162,13 @@ int main(int argc, char** argv) {
 		if(text != NULL) {
 			/*
 			 * / 1 2 3 4 5 6 7 8 9 10 11 12 13
-			 * 1 1 2 3 4 5 6 7 8 9 0  -  =
+			 * 1 1 2 3 4 5 6 7 8 9 0  -  =  bs
 			 * 2 q w e r t y u i o p  [  ]  rt
 			 * 3 a s d f g h j k l ;  '  \  cl
 			 * 4 z x c v b n m , . /  sp
 			 */
 			int c = GetKeyPressed();
-			if(c == 0) {
-				text->key = 0;
-			} else if(KEY_ONE <= c && c <= KEY_NINE) {
+			if(KEY_ONE <= c && c <= KEY_NINE) {
 				text->key = (1 << 4) | (c - KEY_ONE + 1);
 			} else if(c == KEY_ZERO) {
 				text->key = (1 << 4) | 10;
@@ -175,6 +176,8 @@ int main(int argc, char** argv) {
 				text->key = (1 << 4) | 11;
 			} else if(c == KEY_EQUAL) {
 				text->key = (1 << 4) | 12;
+			} else if(c == KEY_BACKSPACE) {
+				text->key = (1 << 4) | 13;
 			} else if(c == KEY_LEFT_BRACKET) {
 				text->key = (2 << 4) | 11;
 			} else if(c == KEY_RIGHT_BRACKET) {
@@ -259,10 +262,9 @@ int main(int argc, char** argv) {
 			int y, x;
 			for(y = 0; y < video->height; y++) {
 				for(x = 0; x < video->width; x++) {
-					if(video->fb[y * video->width + x] != fb[y * TMS9918_PIXELS_X + x]) {
+					if(video->fb[y * video->width + x] != fb[y * video->width + x]) {
 						uint32_t c = video->fb[y * video->width + x];
-						// printf("%X\n", c);
-						DrawPixel(x, y, (Color){(c >> 24) & 0xff, (c >> 16) & 0xff, (c >> 8) & 0xff, 0xff});
+						DrawPixel(x, y, (Color){(c >> 24) & 0xff, (c >> 16) & 0xff, (c >> 8) & 0xff, c & 0xff});
 						fb[y * video->width + x] = c;
 					}
 				}
@@ -272,7 +274,7 @@ int main(int argc, char** argv) {
 
 			DrawTexturePro(r.texture, (Rectangle){0, 0, video->width, -video->height}, (Rectangle){text == NULL ? 0 : 100, 0, GetScreenWidth() - (text == NULL ? 0 : 100), GetScreenHeight()}, (Vector2){0, 0}, 0, WHITE);
 		} else {
-			DrawText("No Video", 0, 0, 20, WHITE);
+			DrawText("No Video", 0, 20, 20, WHITE);
 		}
 
 		DrawText("Caps Lock", 5, 5, 10, WHITE);

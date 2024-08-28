@@ -26,6 +26,7 @@ void shiroi_text_mk_i(shiroi_t* shiroi) {
 				/* I/O Read */
 				if(addr == 9) {
 					Z80_SET_DATA(shiroi->z80_pins, shiroi->cards[i].text.key);
+					shiroi->cards[i].text.key = 0;
 				} else if(addr == 11) {
 					Z80_SET_DATA(shiroi->z80_pins, shiroi->cards[i].type);
 				}
