@@ -159,95 +159,95 @@ int main(int argc, char** argv) {
 		if(text != NULL) {
 			/*
 			 * / 1 2 3 4 5 6 7 8 9 10 11 12 13
-			 * 1 1 2 3 4 5 6 7 8 9 0  -  =  
+			 * 1 1 2 3 4 5 6 7 8 9 0  -  =
 			 * 2 q w e r t y u i o p  [  ]  rt
 			 * 3 a s d f g h j k l ;  '  \  cl
 			 * 4 z x c v b n m , . /  sp
 			 */
 			int c = GetKeyPressed();
-			if(c == 0){
+			if(c == 0) {
 				text->key = 0;
-			}else if(KEY_ONE <= c && c <= KEY_NINE){
+			} else if(KEY_ONE <= c && c <= KEY_NINE) {
 				text->key = (1 << 4) | (c - KEY_ONE + 1);
-			}else if(c == KEY_ZERO){
+			} else if(c == KEY_ZERO) {
 				text->key = (1 << 4) | 10;
-			}else if(c == KEY_MINUS){
+			} else if(c == KEY_MINUS) {
 				text->key = (1 << 4) | 11;
-			}else if(c == KEY_EQUAL){
+			} else if(c == KEY_EQUAL) {
 				text->key = (1 << 4) | 12;
-			}else if(c == KEY_LEFT_BRACKET){
+			} else if(c == KEY_LEFT_BRACKET) {
 				text->key = (2 << 4) | 11;
-			}else if(c == KEY_RIGHT_BRACKET){
+			} else if(c == KEY_RIGHT_BRACKET) {
 				text->key = (2 << 4) | 12;
-			}else if(c == KEY_ENTER){
+			} else if(c == KEY_ENTER) {
 				text->key = (2 << 4) | 13;
-			}else if(c == KEY_SEMICOLON){
+			} else if(c == KEY_SEMICOLON) {
 				text->key = (3 << 4) | 10;
-			}else if(c == KEY_APOSTROPHE){
+			} else if(c == KEY_APOSTROPHE) {
 				text->key = (3 << 4) | 11;
-			}else if(c == KEY_BACKSLASH){
+			} else if(c == KEY_BACKSLASH) {
 				text->key = (3 << 4) | 12;
-			}else if(c == KEY_LEFT_SHIFT || c == KEY_RIGHT_SHIFT){
+			} else if(c == KEY_LEFT_SHIFT || c == KEY_RIGHT_SHIFT) {
 				text->key = (3 << 4) | 13;
-			}else if(c == KEY_COMMA){
+			} else if(c == KEY_COMMA) {
 				text->key = (4 << 4) | 8;
-			}else if(c == KEY_PERIOD){
+			} else if(c == KEY_PERIOD) {
 				text->key = (4 << 4) | 9;
-			}else if(c == KEY_SLASH){
+			} else if(c == KEY_SLASH) {
 				text->key = (4 << 4) | 10;
-			}else if(c == KEY_SPACE){
+			} else if(c == KEY_SPACE) {
 				text->key = (4 << 4) | 11;
-			}else if(c == KEY_Q){
+			} else if(c == KEY_Q) {
 				text->key = (2 << 4) | 1;
-			}else if(c == KEY_W){
+			} else if(c == KEY_W) {
 				text->key = (2 << 4) | 2;
-			}else if(c == KEY_E){
+			} else if(c == KEY_E) {
 				text->key = (2 << 4) | 3;
-			}else if(c == KEY_R){
+			} else if(c == KEY_R) {
 				text->key = (2 << 4) | 4;
-			}else if(c == KEY_T){
+			} else if(c == KEY_T) {
 				text->key = (2 << 4) | 5;
-			}else if(c == KEY_Y){
+			} else if(c == KEY_Y) {
 				text->key = (2 << 4) | 6;
-			}else if(c == KEY_U){
+			} else if(c == KEY_U) {
 				text->key = (2 << 4) | 7;
-			}else if(c == KEY_I){
+			} else if(c == KEY_I) {
 				text->key = (2 << 4) | 8;
-			}else if(c == KEY_O){
+			} else if(c == KEY_O) {
 				text->key = (2 << 4) | 9;
-			}else if(c == KEY_P){
+			} else if(c == KEY_P) {
 				text->key = (2 << 4) | 10;
-			}else if(c == KEY_A){
+			} else if(c == KEY_A) {
 				text->key = (3 << 4) | 1;
-			}else if(c == KEY_S){
+			} else if(c == KEY_S) {
 				text->key = (3 << 4) | 2;
-			}else if(c == KEY_D){
+			} else if(c == KEY_D) {
 				text->key = (3 << 4) | 3;
-			}else if(c == KEY_F){
+			} else if(c == KEY_F) {
 				text->key = (3 << 4) | 4;
-			}else if(c == KEY_G){
+			} else if(c == KEY_G) {
 				text->key = (3 << 4) | 5;
-			}else if(c == KEY_H){
+			} else if(c == KEY_H) {
 				text->key = (3 << 4) | 6;
-			}else if(c == KEY_J){
+			} else if(c == KEY_J) {
 				text->key = (3 << 4) | 7;
-			}else if(c == KEY_K){
+			} else if(c == KEY_K) {
 				text->key = (3 << 4) | 8;
-			}else if(c == KEY_L){
+			} else if(c == KEY_L) {
 				text->key = (3 << 4) | 9;
-			}else if(c == KEY_Z){
+			} else if(c == KEY_Z) {
 				text->key = (4 << 4) | 1;
-			}else if(c == KEY_X){
+			} else if(c == KEY_X) {
 				text->key = (4 << 4) | 2;
-			}else if(c == KEY_C){
+			} else if(c == KEY_C) {
 				text->key = (4 << 4) | 3;
-			}else if(c == KEY_V){
+			} else if(c == KEY_V) {
 				text->key = (4 << 4) | 4;
-			}else if(c == KEY_B){
+			} else if(c == KEY_B) {
 				text->key = (4 << 4) | 5;
-			}else if(c == KEY_N){
+			} else if(c == KEY_N) {
 				text->key = (4 << 4) | 6;
-			}else if(c == KEY_M){
+			} else if(c == KEY_M) {
 				text->key = (4 << 4) | 7;
 			}
 		}

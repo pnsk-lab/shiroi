@@ -40,6 +40,14 @@ void main(void){
  * 2 q w e r t y u i o p  [  ]  rt
  * 3 a s d f g h j k l ;  '  \  cl
  * 4 z x c v b n m , . /  sp
+ *
+ * When Caps Lock
+ *
+ * / 1 2 3 4 5 6 7 8 9 10 11 12 13
+ * 1 ! @ # $ % ^ & * ( )  _  +  
+ * 2 Q W E R T Y U I O P  {  }  rt
+ * 3 A S D F G H J K L :  "  |  cl
+ * 4 Z X C V B N M < > ?  sp
  */
 	const char* keys;
 
