@@ -49,6 +49,7 @@ typedef struct {
 
 typedef struct {
 	unsigned char key;
+	bool caps;
 	int tick;
 } shiroi_text_t;
 

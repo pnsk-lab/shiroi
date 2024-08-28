@@ -125,9 +125,9 @@ int main(int argc, char** argv) {
 
 	SetTraceLogLevel(LOG_NONE);
 	if(video != NULL) {
-		InitWindow(video->width * scx, video->height * scy, "Shiroi Emulator");
+		InitWindow(video->width * scx + (text == NULL ? 0 : 100), video->height * scy, "Shiroi Emulator");
 	} else {
-		InitWindow(640, 480, "Shiroi Emulator");
+		InitWindow(640 + (text == NULL ? 0 : 100), 480, "Shiroi Emulator");
 	}
 	InitAudioDevice();
 	SetAudioStreamBufferSizeDefault(512);
@@ -189,6 +189,7 @@ int main(int argc, char** argv) {
 				text->key = (3 << 4) | 12;
 			} else if(c == KEY_LEFT_SHIFT || c == KEY_RIGHT_SHIFT) {
 				text->key = (3 << 4) | 13;
+				text->caps = !text->caps;
 			} else if(c == KEY_COMMA) {
 				text->key = (4 << 4) | 8;
 			} else if(c == KEY_PERIOD) {
@@ -269,10 +270,14 @@ int main(int argc, char** argv) {
 
 			EndTextureMode();
 
-			DrawTexturePro(r.texture, (Rectangle){0, 0, video->width, -video->height}, (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()}, (Vector2){0, 0}, 0, WHITE);
+			DrawTexturePro(r.texture, (Rectangle){0, 0, video->width, -video->height}, (Rectangle){text == NULL ? 0 : 100, 0, GetScreenWidth() - (text == NULL ? 0 : 100), GetScreenHeight()}, (Vector2){0, 0}, 0, WHITE);
 		} else {
 			DrawText("No Video", 0, 0, 20, WHITE);
 		}
+
+		DrawText("Caps Lock", 5, 5, 10, WHITE);
+
+		DrawCircle(100 - 10, 10, 5, text->caps ? RED : BLACK);
 
 		EndDrawing();
 	}
