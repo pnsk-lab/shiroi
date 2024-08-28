@@ -1,8 +1,8 @@
 /* $Id$ */
 
-#include "io.h"
+#include "math.h"
 
-#include "am9511.h"
+#include "io.h"
 
 #define AM_SR       0x80 /* service request on completion */
 #define AM_SINGLE   0x60 /* 16 bit integer */
@@ -94,7 +94,7 @@ long mull(long a, long b){
 	return r;
 }
 
-void fpu_card(int t, int port){
+void math_card(int t, int port){
 	if(t == 0x21){
 		fpu_stack = port - 2;
 		fpu_command = port - 1;

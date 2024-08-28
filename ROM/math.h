@@ -1,9 +1,9 @@
 /* $Id$ */
 
-#ifndef __AM9511_H__
-#define __AM9511_H__
+#ifndef __MATH_H__
+#define __MATH_H__
 
-void fpu_card(int t, int port);
+void math_card(int t, int port);
 
 long modl(long a, long b);
 long divl(long a, long b);

@@ -1,6 +1,6 @@
 /* $Id$ */
 
-#include "psg.h"
+#include "sound.h"
 
 #include "io.h"
 
@@ -33,7 +33,7 @@ void _beep(unsigned long howlong){
 	outp(psg_data, 0x3f);
 }
 
-void psg_card(int t, int port){
+void sound_card(int t, int port){
 	if(t == 0x11){
 		psg_addr = port - 2;
 		psg_data = port - 1;

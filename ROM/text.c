@@ -4,7 +4,7 @@
 
 #include "char.h"
 #include "video.h"
-#include "am9511.h"
+#include "math.h"
 #include "io.h"
 
 char caps;

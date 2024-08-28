@@ -1,8 +1,8 @@
 /* $Id$ */
 
 #include "io.h"
-#include "am9511.h"
-#include "psg.h"
+#include "math.h"
+#include "sound.h"
 #include "video.h"
 #include "text.h"
 #include "char.h"
@@ -226,10 +226,9 @@ void init_cards(void){
 		int t = inp(port);
 		if(t != 0){
 			video_card(t, port);
-			psg_card(t, port);
-			fpu_card(t, port);
+			sound_card(t, port);
+			math_card(t, port);
 			text_card(t, port);
-
 		}
 		port += 3;
 	}
