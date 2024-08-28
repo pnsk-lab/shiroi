@@ -5,6 +5,7 @@
 #include "card/shiroi_video_mk_i.h"
 #include "card/shiroi_sound_mk_i.h"
 #include "card/shiroi_math_mk_i.h"
+#include "card/shiroi_text_mk_i.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,7 +44,16 @@ shiroi_card_t* shiroi_get_math_card(shiroi_t* shiroi) {
 	int i;
 	for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
 		if(shiroi->cards[i].type == 0) continue;
-		if((shiroi->cards[i].type & 0xf0) == SHIROI_MATH) return &shiroi->cards[i];
+		if(shiroi->cards[i].type == SHIROI_MATH_MARK_I) return &shiroi->cards[i];
+	}
+	return NULL;
+}
+
+shiroi_card_t* shiroi_get_text_card(shiroi_t* shiroi) {
+	int i;
+	for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
+		if(shiroi->cards[i].type == 0) continue;
+		if(shiroi->cards[i].type == SHIROI_TEXT_MARK_I) return &shiroi->cards[i];
 	}
 	return NULL;
 }
@@ -62,6 +72,8 @@ void shiroi_install(shiroi_t* shiroi, int slot, int card) {
 		shiroi_sound_mk_i_install(shiroi, slot);
 	} else if(card == SHIROI_MATH_MARK_I) {
 		shiroi_math_mk_i_install(shiroi, slot);
+	} else if(card == SHIROI_TEXT_MARK_I) {
+		shiroi_text_mk_i_install(shiroi, slot);
 	}
 }
 
@@ -88,8 +100,10 @@ void shiroi_loop(shiroi_t* shiroi) {
 				uint8_t data = shiroi->ram[addr];
 				Z80_SET_DATA(shiroi->z80_pins, data);
 			} else if(shiroi->z80_pins & Z80_WR) {
-				uint8_t data = Z80_GET_DATA(shiroi->z80_pins);
-				shiroi->ram[addr] = data;
+				if(addr >= 0x8000) {
+					uint8_t data = Z80_GET_DATA(shiroi->z80_pins);
+					shiroi->ram[addr] = data;
+				}
 			}
 		} else if(shiroi->z80_pins & Z80_IORQ) {
 			uint16_t io = Z80_GET_ADDR(shiroi->z80_pins);
@@ -101,11 +115,13 @@ void shiroi_loop(shiroi_t* shiroi) {
 				shiroi_video_mk_i(shiroi);
 				shiroi_sound_mk_i(shiroi);
 				shiroi_math_mk_i(shiroi);
+				shiroi_text_mk_i(shiroi);
 			}
 		}
 
 		shiroi_video_mk_i_tick(shiroi);
 		shiroi_sound_mk_i_tick(shiroi);
 		shiroi_math_mk_i_tick(shiroi);
+		shiroi_text_mk_i_tick(shiroi);
 	}
 }

@@ -9,6 +9,8 @@ void scroll_y(void);
 void beep(void);
 void _beep(unsigned long howlong);
 void init_cards(void);
+void print_ptr(void*);
+char getch(void);
 
 unsigned short posx;
 unsigned short posy;
@@ -19,6 +21,9 @@ short psg_addr;
 short psg_data;
 short fpu_addr;
 short fpu_data;
+short text_kbd_data;
+
+unsigned char basicbuffer[1024 * 30];
 
 void main(void){
 	int i;
@@ -29,6 +34,7 @@ void main(void){
 	vdp_addr = -1;
 	psg_addr = -1;
 	fpu_addr = -1;
+	text_kbd_data = -1;
 
 	init_cards();
 
@@ -58,26 +64,53 @@ void main(void){
 	outp(vdp_addr, 0x87);
 
 	write_vram(0);
-	for(i = 0; i < 0x800; i++) outp(vdp_data, *((unsigned char*)(0x2000 + i)));
+	for(i = 0; i < 0x800; i++) outp(vdp_data, *((unsigned char*)(0x6000 - 2048 + i)));
 
 	beep();
 
 	putstr("Shiroi Microcomputer BASIC\r\n");
-	if(fpu_addr == -1){
-		putstr("Math Card Mark I not present\r\n");
-	}else{
-		putstr("Math Card Mark I present\r\n");
-	}
 	if(psg_addr == -1){
 		putstr("Sound Card Mark I not present\r\n");
 	}else{
 		putstr("Sound Card Mark I present\r\n");
 	}
+	if(fpu_addr == -1){
+		putstr("Math  Card Mark I not present\r\n");
+	}else{
+		putstr("Math  Card Mark I present\r\n");
+	}
+	if(text_kbd_data == -1){
+		putstr("Text  Card Mark I not present\r\n");
+		putstr("Text  Card Mark I is required to use the BASIC\r\n");
+		putstr("Halted. Get one.\r\n");
+		while(1);
+	}else{
+		putstr("Text  Card Mark I present\r\n");
+	}
 
 	write_vram(0x800 + 40 * 12);
 	for(i = 0; i < 0x100; i++) outp(vdp_data, i);
+	while(1){
+		putchar(getch());
+	}
+}
 
-	while(1);
+char getch(void){
+	char k = 0;
+	while((k = inp(text_kbd_data)) == 0);
+	while(inp(text_kbd_data) != 0);
+	return k;
+}
+
+void print_ptr(void* ptr){
+	unsigned short p = (unsigned short)ptr;
+	int i;
+	const char hex[] = "0123456789ABCDEF";
+	putstr("0x");
+	for(i = 0; i < 4; i++){
+		putchar(hex[(p & 0xf000) >> 12]);
+		p = p << 4;
+	}
 }
 
 void init_cards(void){
@@ -95,7 +128,10 @@ void init_cards(void){
 			}else if(t == 0x21){
 				fpu_addr = port - 2;
 				fpu_data = port - 1;
+			}else if(t == 0x22){
+				text_kbd_data = port - 2;
 			}
+
 		}
 		port += 3;
 	}

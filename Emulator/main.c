@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
 		fprintf(fconf, "slot1=video_mark_1\n");
 		fprintf(fconf, "slot2=sound_mark_1\n");
 		fprintf(fconf, "slot3=math_mark_1\n");
+		fprintf(fconf, "slot4=text_mark_1\n");
 		fprintf(fconf, "rom=shiroi.rom\n");
 		fclose(fconf);
 	}
@@ -54,7 +55,7 @@ int main(int argc, char** argv) {
 
 			char* line = ini + incr;
 
-			if(strlen(line) != 0) {
+			if(strlen(line) != 0 && line[0] != '#') {
 				int j;
 				for(j = 0; line[j] != 0; j++) {
 					if(line[j] == '=') {
@@ -83,6 +84,9 @@ int main(int argc, char** argv) {
 							} else if(strcmp(line + j + 1, "math_mark_1") == 0) {
 								dev = SHIROI_MATH_MARK_I;
 								n = "Math Mark I";
+							} else if(strcmp(line + j + 1, "text_mark_1") == 0) {
+								dev = SHIROI_TEXT_MARK_I;
+								n = "Text Mark I";
 							}
 							if(dev == -1) {
 								fprintf(stderr, "No such device called `%s' ; ignoring\n", line + j + 1);
@@ -112,6 +116,11 @@ int main(int argc, char** argv) {
 	shiroi_video_t* video = NULL;
 	if(videocard != NULL) {
 		video = videocard->videoptr;
+	}
+	shiroi_card_t* textcard = shiroi_get_text_card(&shiroi);
+	shiroi_text_t* text = NULL;
+	if(textcard != NULL) {
+		text = textcard->textptr;
 	}
 
 	SetTraceLogLevel(LOG_NONE);
@@ -146,6 +155,10 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 
 		ClearBackground(BLACK);
+
+		if(text != NULL) {
+			text->key = GetCharPressed();
+		}
 
 		if(video != NULL) {
 			BeginTextureMode(r);
