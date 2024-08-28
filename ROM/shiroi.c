@@ -23,10 +23,59 @@ short fpu_addr;
 short fpu_data;
 short text_kbd_data;
 
+char caps;
+
+unsigned char keylist[13 * 4];
+unsigned char keylist_caps[13 * 4];
+
 unsigned char basicbuffer[1024 * 30];
 
 void main(void){
 	int i;
+	caps = 0;
+
+/*
+ * / 1 2 3 4 5 6 7 8 9 10 11 12 13
+ * 1 1 2 3 4 5 6 7 8 9 0  -  =  
+ * 2 q w e r t y u i o p  [  ]  rt
+ * 3 a s d f g h j k l ;  '  \  cl
+ * 4 z x c v b n m , . /  sp
+ */
+	const char* keys;
+
+	keys = "1234567890-= ";
+	for(i = 0; i < 13; i++){
+		keylist[i] = keys[i];
+	}
+	keys = "qwertyuiop[]\n";
+	for(i = 0; i < 13; i++){
+		keylist[13 + i] = keys[i];
+	}
+	keys = "asdfghjkl;'\\!";
+	for(i = 0; i < 13; i++){
+		keylist[26 + i] = keys[i];
+	}
+	keys = "zxcvbnm,./    ";
+	for(i = 0; i < 13; i++){
+		keylist[39 + i] = keys[i];
+	}
+
+	keys = "!@#$%^&*()_+ ";
+	for(i = 0; i < 13; i++){
+		keylist_caps[i] = keys[i];
+	}
+	keys = "QWERTYUIOP{}\n";
+	for(i = 0; i < 13; i++){
+		keylist_caps[13 + i] = keys[i];
+	}
+	keys = "ASDFGHJKL:\"|!";
+	for(i = 0; i < 13; i++){
+		keylist_caps[26 + i] = keys[i];
+	}
+	keys = "ZXCVBNM<>?    ";
+	for(i = 0; i < 13; i++){
+		keylist_caps[39 + i] = keys[i];
+	}
 
 	posx = 0;
 	posy = 0;
@@ -66,18 +115,18 @@ void main(void){
 	write_vram(0);
 	for(i = 0; i < 0x800; i++) outp(vdp_data, *((unsigned char*)(0x6000 - 2048 + i)));
 
-	beep();
+//	beep();
 
 	putstr("Shiroi Microcomputer BASIC\r\n");
 	if(psg_addr == -1){
 		putstr("Sound Card Mark I not present\r\n");
 	}else{
-		putstr("Sound Card Mark I present\r\n");
+		putstr("Sound Card Mark I     present\r\n");
 	}
 	if(fpu_addr == -1){
 		putstr("Math  Card Mark I not present\r\n");
 	}else{
-		putstr("Math  Card Mark I present\r\n");
+		putstr("Math  Card Mark I     present\r\n");
 	}
 	if(text_kbd_data == -1){
 		putstr("Text  Card Mark I not present\r\n");
@@ -85,11 +134,9 @@ void main(void){
 		putstr("Halted. Get one.\r\n");
 		while(1);
 	}else{
-		putstr("Text  Card Mark I present\r\n");
+		putstr("Text  Card Mark I     present\r\n");
 	}
 
-	write_vram(0x800 + 40 * 12);
-	for(i = 0; i < 0x100; i++) outp(vdp_data, i);
 	while(1){
 		putchar(getch());
 	}
@@ -97,9 +144,18 @@ void main(void){
 
 char getch(void){
 	char k = 0;
+rep:
 	while((k = inp(text_kbd_data)) == 0);
 	while(inp(text_kbd_data) != 0);
-	return k;
+	unsigned char top = (k & 0xf0) >> 4;
+	unsigned char bot = (k & 0x0f);
+	top--;
+	bot--;
+	if(keylist[top * 13 + bot] == '!'){
+		caps = caps == 0 ? 1 : 0;
+		goto rep;
+	}
+	return caps ? keylist_caps[top * 13 + bot] : keylist[top * 13 + bot];
 }
 
 void print_ptr(void* ptr){
