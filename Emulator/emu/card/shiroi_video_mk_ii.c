@@ -28,7 +28,6 @@ void shiroi_video_mk_ii_install(shiroi_t* shiroi, int slot) {
 
 	mc6847_init(&shiroi->cards[slot].video.mc6847, &desc);
 
-	shiroi->cards[slot].video.mc6847.pins |= MC6847_INV;
 	int x, y;
 	for(y = 0; y < shiroi->cards[slot].video.height; y++) {
 		for(x = 0; x < shiroi->cards[slot].video.width; x++) {

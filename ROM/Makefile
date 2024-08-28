@@ -1,6 +1,9 @@
 # $Id$
 
 .PHONY: all clean
+.SUFFIXES: .c .rel
+
+OBJS = shiroi.rel basic.rel am9511.rel io.rel text.rel video.rel psg.rel char.rel
 
 all: shiroi.rom
 
@@ -13,9 +16,14 @@ shiroi.bin: Discard/shiroi.ihx
 font.bin: Discard/font.ihx
 	makebin -s 2048 Discard/font.ihx font.bin
 
-Discard/shiroi.ihx: shiroi.c
+Discard/shiroi.ihx: $(OBJS)
 	mkdir -p Discard
-	sdcc -mz80 -o Discard/shiroi.ihx --data-loc 0x8000 --idata-loc 0x8000 --code-loc 0 --stack-loc 0x9000 --no-std-crt0 --nostdinc --nostdlib shiroi.c
+	sdcc -mz80 -o $@ --data-loc 0x8000 --idata-loc 0x8000 --code-loc 0 --stack-loc 0x9000 --no-std-crt0 --nostdinc --nostdlib $(OBJS)
+
+.c.rel:
+	mkdir -p Discard
+	sdcc -DONLY_VDP -c -mz80 -o $@ --no-std-crt0 --nostdinc --nostdlib $<
+	rm -f "`echo $< | sed -E 's/\.c/.asm/g'`" "`echo $< | sed -E 's/\.c/.sym/g'`" "`echo $< | sed -E 's/\.c/.lst/g'`"
 
 Discard/font.ihx: font.asm
 	mkdir -p Discard
@@ -23,4 +31,4 @@ Discard/font.ihx: font.asm
 	sdldz80 -i $@ Discard/font.rel
 
 clean:
-	rm -rf Discard *.o *.bin *.rom
+	rm -rf Discard *.o *.bin *.rom *.rel
