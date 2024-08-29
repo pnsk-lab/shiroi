@@ -27,6 +27,20 @@ void shiroi_video_mk_i_install(shiroi_t* shiroi, int slot) {
 void shiroi_video_mk_i_reset(shiroi_t* shiroi, int slot) {
 	vrEmuTms9918Reset(shiroi->cards[slot].video.vdp);
 	shiroi->cards[slot].video.tick = 0;
+	int y, x;
+	for(y = 0; y < shiroi->cards[slot].video.height; y++) {
+		for(x = 0; x < shiroi->cards[slot].video.width; x++) {
+			shiroi->cards[slot].video.fb[y * shiroi->cards[slot].video.width + x] = 0x000000ff;
+		}
+	}
+	int i;
+	int addr;
+	addr = 0 | 0x4000;
+	vrEmuTms9918WriteAddr(shiroi->cards[slot].video.vdp, (addr & 0xff00) >> 8);
+	vrEmuTms9918WriteAddr(shiroi->cards[slot].video.vdp, (addr & 0xff));
+	for(i = 0; i < 0xffff; i++) {
+		vrEmuTms9918WriteData(shiroi->cards[slot].video.vdp, 0);
+	}
 }
 
 void shiroi_video_mk_i(shiroi_t* shiroi) {

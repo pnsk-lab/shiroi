@@ -27,6 +27,8 @@ void shiroi_math_mk_i(shiroi_t* shiroi) {
 				/* I/O Read */
 				if(addr == 6) {
 					Z80_SET_DATA(shiroi->z80_pins, am_pop(shiroi->cards[i].math.am9511));
+				} else if(addr == 7) {
+					Z80_SET_DATA(shiroi->z80_pins, 1);
 				} else if(addr == 8) {
 					Z80_SET_DATA(shiroi->z80_pins, shiroi->cards[i].type);
 				}

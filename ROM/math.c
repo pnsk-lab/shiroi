@@ -67,6 +67,7 @@ long divl(long a, long b){
 		b = b >> 8;
 	}
 	outp(fpu_command, AM_DOUBLE | AM_DIV);
+	while(!(inp(fpu_command) & 1));
 	unsigned long r = 0;
 	for(i = 0; i < 4; i++){
 		r = r << 8;
@@ -86,6 +87,7 @@ long mull(long a, long b){
 		b = b >> 8;
 	}
 	outp(fpu_command, AM_DOUBLE | AM_MUL);
+	while(!(inp(fpu_command) & 1));
 	long r = 0;
 	for(i = 0; i < 4; i++){
 		r = r << 8;

@@ -112,7 +112,7 @@ void shiroi_init(shiroi_t* shiroi) {
 void shiroi_loop(shiroi_t* shiroi) {
 	int x = 0;
 	int y = 0;
-	while(!shiroi->stop) {
+	while(!shiroi->stop || shiroi->reset) {
 		if(shiroi->reset) {
 			z80_reset(&shiroi->z80);
 			int i;
@@ -120,6 +120,9 @@ void shiroi_loop(shiroi_t* shiroi) {
 				shiroi_reset_card(shiroi, i);
 			}
 			shiroi->reset = false;
+			incre = 0;
+			for(i = 0; i < 480; i++) audio[i] = 0;
+			continue;
 		}
 		shiroi->z80_pins = z80_tick(&shiroi->z80, shiroi->z80_pins);
 		if(shiroi->z80_pins & Z80_MREQ) {

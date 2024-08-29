@@ -39,6 +39,12 @@ void shiroi_video_mk_ii_install(shiroi_t* shiroi, int slot) {
 void shiroi_video_mk_ii_reset(shiroi_t* shiroi, int slot) {
 	mc6847_reset(&shiroi->cards[slot].video.mc6847);
 	shiroi->cards[slot].video.tick = 0;
+	int y, x;
+	for(y = 0; y < shiroi->cards[slot].video.height; y++) {
+		for(x = 0; x < shiroi->cards[slot].video.width; x++) {
+			shiroi->cards[slot].video.fb[y * shiroi->cards[slot].video.width + x] = 0x000000ff;
+		}
+	}
 }
 
 void shiroi_video_mk_ii(shiroi_t* shiroi) {

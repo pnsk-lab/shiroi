@@ -34,7 +34,7 @@ Sound Mark I card maps itself to:
 
 Math Mark I card maps itself to:
 	6: AM9511 stack
-	7: AM9511 command
+	7: AM9511 command (W) / AM9511 ready (R)
 	8: See above
 
 Text Mark I card maps itself to:

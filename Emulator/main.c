@@ -193,6 +193,16 @@ int main(int argc, char** argv) {
 			} else if(c == KEY_LEFT_SHIFT || c == KEY_RIGHT_SHIFT) {
 				text->key = (3 << 4) | 13;
 				text->caps = !text->caps;
+			} else if(c == KEY_F1) {
+				if(shiroi.stop) {
+					shiroi.stop = false;
+					shiroi.reset = true;
+					thread_start();
+				} else {
+					shiroi.reset = true;
+					shiroi.stop = true;
+					thread_end();
+				}
 			} else if(c == KEY_F2) {
 				shiroi.reset = true;
 			} else if(c == KEY_COMMA) {
