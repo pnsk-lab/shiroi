@@ -80,9 +80,26 @@ void shiroi_install(shiroi_t* shiroi, int slot, int card) {
 	}
 }
 
+void shiroi_reset_card(shiroi_t* shiroi, int slot) {
+	int card = shiroi->cards[slot].type;
+	if(card == 0) {
+	} else if(card == SHIROI_VIDEO_MARK_I) {
+		shiroi_video_mk_i_reset(shiroi, slot);
+	} else if(card == SHIROI_VIDEO_MARK_II) {
+		shiroi_video_mk_ii_reset(shiroi, slot);
+	} else if(card == SHIROI_SOUND_MARK_I) {
+		shiroi_sound_mk_i_reset(shiroi, slot);
+	} else if(card == SHIROI_MATH_MARK_I) {
+		shiroi_math_mk_i_reset(shiroi, slot);
+	} else if(card == SHIROI_TEXT_MARK_I) {
+		shiroi_text_mk_i_reset(shiroi, slot);
+	}
+}
+
 void shiroi_init(shiroi_t* shiroi) {
 	shiroi->z80_pins = z80_init(&shiroi->z80);
 	shiroi->stop = false;
+	shiroi->reset = false;
 	shiroi->play_audio = shiroi_play_audio;
 
 	int i;
@@ -96,6 +113,14 @@ void shiroi_loop(shiroi_t* shiroi) {
 	int x = 0;
 	int y = 0;
 	while(!shiroi->stop) {
+		if(shiroi->reset) {
+			z80_reset(&shiroi->z80);
+			int i;
+			for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
+				shiroi_reset_card(shiroi, i);
+			}
+			shiroi->reset = false;
+		}
 		shiroi->z80_pins = z80_tick(&shiroi->z80, shiroi->z80_pins);
 		if(shiroi->z80_pins & Z80_MREQ) {
 			uint16_t addr = Z80_GET_ADDR(shiroi->z80_pins);

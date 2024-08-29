@@ -12,6 +12,8 @@ void shiroi_math_mk_i_install(shiroi_t* shiroi, int slot) {
 	shiroi->cards[slot].math.am9511 = am_create(0, 0);
 }
 
+void shiroi_math_mk_i_reset(shiroi_t* shiroi, int slot) { am_reset(shiroi->cards[slot].math.am9511); }
+
 void shiroi_math_mk_i(shiroi_t* shiroi) {
 	int i;
 

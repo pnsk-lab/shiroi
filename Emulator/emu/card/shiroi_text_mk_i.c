@@ -13,6 +13,11 @@ void shiroi_text_mk_i_install(shiroi_t* shiroi, int slot) {
 	shiroi->cards[slot].text.caps = false;
 }
 
+void shiroi_text_mk_i_reset(shiroi_t* shiroi, int slot) {
+	shiroi->cards[slot].text.key = 0;
+	shiroi->cards[slot].text.caps = false;
+}
+
 void shiroi_text_mk_i(shiroi_t* shiroi) {
 	int i;
 

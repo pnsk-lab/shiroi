@@ -193,6 +193,8 @@ int main(int argc, char** argv) {
 			} else if(c == KEY_LEFT_SHIFT || c == KEY_RIGHT_SHIFT) {
 				text->key = (3 << 4) | 13;
 				text->caps = !text->caps;
+			} else if(c == KEY_F2) {
+				shiroi.reset = true;
 			} else if(c == KEY_COMMA) {
 				text->key = (4 << 4) | 8;
 			} else if(c == KEY_PERIOD) {

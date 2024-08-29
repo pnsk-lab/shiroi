@@ -8,7 +8,7 @@ short psg_addr;
 short psg_data;
 
 void beep(void){
-	_beep(3L * 1024);
+	_beep(1L * 1024);
 }
 
 void _beep(unsigned long howlong){
@@ -19,7 +19,7 @@ void _beep(unsigned long howlong){
 	outp(psg_data, 0x0f);
 
 	outp(psg_addr, 0);
-	outp(psg_data, 0xd6);
+	outp(psg_data, 0xb0);
 
 	outp(psg_addr, 1);
 	outp(psg_data, 0x0);

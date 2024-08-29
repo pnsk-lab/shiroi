@@ -22,6 +22,8 @@ void shiroi_sound_mk_i_install(shiroi_t* shiroi, int slot) {
 	ay38910_init(&shiroi->cards[slot].sound.psg, &desc);
 }
 
+void shiroi_sound_mk_i_reset(shiroi_t* shiroi, int slot) { ay38910_reset(&shiroi->cards[slot].sound.psg); }
+
 void shiroi_sound_mk_i(shiroi_t* shiroi) {
 	int i;
 

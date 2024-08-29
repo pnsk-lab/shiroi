@@ -112,7 +112,7 @@ void main(void){
 
 	clear();
 
-//	beep();
+	beep();
 
 	if(text_kbd_data == -1){
 		putstr("Text  Card Mark I not present\r\n");

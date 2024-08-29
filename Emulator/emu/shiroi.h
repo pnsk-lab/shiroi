@@ -79,6 +79,7 @@ typedef struct {
 	bool stop;
 	void (*play_audio)(void* buffer, unsigned int frames);
 	shiroi_card_t cards[256 / 3];
+	bool reset;
 } shiroi_t;
 
 void shiroi_init(shiroi_t* shiroi);
