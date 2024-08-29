@@ -106,10 +106,11 @@ void main(void){
 	if(vdp_addr == -1 && vdg_addr == -1){
 #endif
 		int i;
+		debug_number(0x0001);
 		for(i = 0; i < 3; i++){
-			_beep(1L * 1024 / 2);
+			_beep(1L * 1024);
 			unsigned long j;
-			for(j = 0; j < 1L * 1024 / 2; j++);
+			for(j = 0; j < 1L * 1024; j++);
 		}
 		while(1);
 	}
@@ -122,12 +123,14 @@ void main(void){
 	beep();
 
 	if(text_kbd_data == -1){
+		debug_number(0x0002);
 		putstr("Text  Card Mark I not present\r\n");
 		putstr("Text  Card Mark I is required to use the BASIC\r\n");
 		putstr("Halted. Get one.\r\n");
 		while(1);
 	}
 	if(fpu_stack == -1){
+		debug_number(0x0003);
 		putstr("Math  Card Mark I not present\r\n");
 		putstr("Math  Card Mark I is required to use the BASIC\r\n");
 		putstr("Halted. Get one.\r\n");

@@ -143,9 +143,9 @@ int main(int argc, char** argv) {
 
 	SetTraceLogLevel(LOG_NONE);
 	if(video != NULL) {
-		InitWindow(video->width * scx + (text == NULL ? 0 : 200), video->height * scy, "Shiroi Emulator");
+		InitWindow(video->width * scx + ((debug == NULL && text == NULL) ? 0 : 200), video->height * scy, "Shiroi Emulator");
 	} else {
-		InitWindow(640 + (text == NULL ? 0 : 200), 480, "Shiroi Emulator");
+		InitWindow(640 + ((debug == NULL && text == NULL) ? 0 : 200), 480, "Shiroi Emulator");
 	}
 	InitAudioDevice();
 	SetAudioStreamBufferSizeDefault(512);
@@ -304,14 +304,16 @@ int main(int argc, char** argv) {
 
 			EndTextureMode();
 
-			DrawTexturePro(r.texture, (Rectangle){0, 0, video->width, -video->height}, (Rectangle){text == NULL ? 0 : 200, 0, GetScreenWidth() - (text == NULL ? 0 : 200), GetScreenHeight()}, (Vector2){0, 0}, 0, WHITE);
+			DrawTexturePro(r.texture, (Rectangle){0, 0, video->width, -video->height}, (Rectangle){(text == NULL && debug == NULL) ? 0 : 200, 0, GetScreenWidth() - ((text == NULL && debug == NULL) ? 0 : 200), GetScreenHeight()}, (Vector2){0, 0}, 0, WHITE);
 		} else {
-			DrawText("No Video", 0, 20, 20, WHITE);
+			DrawText("No Video", 200 + 5, 5, 20, WHITE);
 		}
 
-		DrawText("Caps Lock", 5, 5, 10, WHITE);
+		if(text != NULL) {
+			DrawText("Caps Lock", 5, 5, 10, WHITE);
 
-		DrawCircle(200 - 10, 10, 5, text->caps ? ON_COLOR : OFF_COLOR);
+			DrawCircle(200 - 10, 10, 5, text->caps ? ON_COLOR : OFF_COLOR);
+		}
 
 		if(debug != NULL) {
 			DrawText("Debug", 5, 5 + 10 + 5, 10, WHITE);

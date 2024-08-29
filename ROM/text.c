@@ -58,14 +58,14 @@ rep:
 
 void clear(void){
 	int i;
-	int size = mull(scrwidth, scrheight);
+	int size = muli(scrwidth, scrheight);
 	setvramaddr(0);
 	for(i = 0; i < size; i++) vramchar(' ');
 }
 
 void scroll_y(void){
 	int i;
-	int size = mull(scrwidth, scrheight - 1);
+	int size = muli(scrwidth, scrheight - 1);
 	for(i = 0; i < size; i++){
 		setreadvramaddr(i + 32);
 		unsigned char ch = getvramchar();
@@ -89,7 +89,7 @@ void print_ptr(void* ptr){
 }
 
 void cursor(void){
-	setvramaddr(mull(posy, scrwidth) + posx);
+	setvramaddr(muli(posy, scrwidth) + posx);
 	_vramchar(136 + 8 * cursorcolor);
 	cursorindex++;
 	if(cursorindex == 2){
@@ -106,7 +106,7 @@ void cursor(void){
 }
 
 void killcursor(void){
-	setvramaddr(mull(cury, scrwidth) + curx);
+	setvramaddr(muli(cury, scrwidth) + curx);
 	vramchar(' ');
 }
 
@@ -116,7 +116,7 @@ void putchar(char c){
 	}else if(c == '\n'){
 		posy++;
 	}else{
-		setvramaddr(mull(posy, scrwidth) + posx);
+		setvramaddr(muli(posy, scrwidth) + posx);
 		vramchar(c);
 		posx++;
 		if(posx == scrwidth){

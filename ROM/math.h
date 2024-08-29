@@ -9,4 +9,6 @@ long modl(long, long);
 long divl(long, long);
 long mull(long, long);
 
+int muli(int, int);
+
 #endif

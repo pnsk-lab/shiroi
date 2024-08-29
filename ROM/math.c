@@ -103,3 +103,13 @@ void math_card(int t, int port){
 	}
 }
 
+int muli(int a, int b){
+	int n = 0;
+	int i;
+	if(b > 0){
+		for(i = 0; i < b; i++) n += a;
+	}else if(b < 0){
+		for(i = 0; i > b; i--) n -= a;
+	}
+	return n;
+}
