@@ -10,11 +10,12 @@ void basic(void){
 	putstr("Shiroi Microcomputer BASIC\r\n");
 	cursor();
 	while(1){
-		char c = getch();
-		killcursor();
+		char c = agetch();
 		if(c == '\n'){
+			killcursor();
 			putstr("\r\n");
-		}else{
+		}else if(c != 0){
+			killcursor();
 			putchar(c);
 		}
 		cursor();

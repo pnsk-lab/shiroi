@@ -10,10 +10,15 @@
 
 #include "shiroi.h"
 
+#define ON_COLOR ((Color){0xc0, 0, 0, 0xff})
+#define OFF_COLOR ((Color){0x20, 0x20, 0x20, 0xff})
+
 shiroi_t shiroi;
 
 void thread_start(void);
 void thread_end(void);
+
+bool get_bit(int n, int f) { return (n & (1 << f)) ? true : false; }
 
 int main(int argc, char** argv) {
 	FILE* fconf = fopen("shiroi.ini", "r");
@@ -90,6 +95,9 @@ int main(int argc, char** argv) {
 							} else if(strcmp(line + j + 1, "text_mark_1") == 0) {
 								dev = SHIROI_TEXT_MARK_I;
 								n = "Text Mark I";
+							} else if(strcmp(line + j + 1, "debug") == 0) {
+								dev = SHIROI_DEBUG;
+								n = "Debug";
 							}
 							if(dev == -1) {
 								fprintf(stderr, "No such device called `%s' ; ignoring\n", line + j + 1);
@@ -120,17 +128,24 @@ int main(int argc, char** argv) {
 	if(videocard != NULL) {
 		video = videocard->videoptr;
 	}
+
 	shiroi_card_t* textcard = shiroi_get_text_card(&shiroi);
 	shiroi_text_t* text = NULL;
 	if(textcard != NULL) {
 		text = textcard->textptr;
 	}
 
+	shiroi_card_t* debugcard = shiroi_get_debug_card(&shiroi);
+	shiroi_debug_t* debug = NULL;
+	if(debugcard != NULL) {
+		debug = debugcard->debugptr;
+	}
+
 	SetTraceLogLevel(LOG_NONE);
 	if(video != NULL) {
-		InitWindow(video->width * scx + (text == NULL ? 0 : 100), video->height * scy, "Shiroi Emulator");
+		InitWindow(video->width * scx + (text == NULL ? 0 : 200), video->height * scy, "Shiroi Emulator");
 	} else {
-		InitWindow(640 + (text == NULL ? 0 : 100), 480, "Shiroi Emulator");
+		InitWindow(640 + (text == NULL ? 0 : 200), 480, "Shiroi Emulator");
 	}
 	InitAudioDevice();
 	SetAudioStreamBufferSizeDefault(512);
@@ -151,7 +166,12 @@ int main(int argc, char** argv) {
 	}
 
 	RenderTexture r;
-	if(video != NULL) r = LoadRenderTexture(video->width, video->height);
+	if(video != NULL) {
+		r = LoadRenderTexture(video->width, video->height);
+		BeginTextureMode(r);
+		ClearBackground(BLACK);
+		EndTextureMode();
+	}
 	PlayAudioStream(as);
 	thread_start();
 	while(!WindowShouldClose()) {
@@ -284,14 +304,29 @@ int main(int argc, char** argv) {
 
 			EndTextureMode();
 
-			DrawTexturePro(r.texture, (Rectangle){0, 0, video->width, -video->height}, (Rectangle){text == NULL ? 0 : 100, 0, GetScreenWidth() - (text == NULL ? 0 : 100), GetScreenHeight()}, (Vector2){0, 0}, 0, WHITE);
+			DrawTexturePro(r.texture, (Rectangle){0, 0, video->width, -video->height}, (Rectangle){text == NULL ? 0 : 200, 0, GetScreenWidth() - (text == NULL ? 0 : 200), GetScreenHeight()}, (Vector2){0, 0}, 0, WHITE);
 		} else {
 			DrawText("No Video", 0, 20, 20, WHITE);
 		}
 
 		DrawText("Caps Lock", 5, 5, 10, WHITE);
 
-		DrawCircle(100 - 10, 10, 5, text->caps ? RED : BLACK);
+		DrawCircle(200 - 10, 10, 5, text->caps ? ON_COLOR : OFF_COLOR);
+
+		if(debug != NULL) {
+			DrawText("Debug", 5, 5 + 10 + 5, 10, WHITE);
+			for(i = 0; i < 4; i++) {
+				int shx = i * (5 + 20 + 5 + 5 + 10);
+				DrawRectangle(shx + 10, 5 + 5 + 10 + 5 + 10 + 5, 20, 5, get_bit(debug->latch[i], 0) ? ON_COLOR : OFF_COLOR);
+				DrawRectangle(shx + 5, 5 + 5 + 10 + 5 + 10 + 10, 5, 20, get_bit(debug->latch[i], 1) ? ON_COLOR : OFF_COLOR);
+				DrawRectangle(shx + 5 + 20 + 5, 5 + 5 + 10 + 5 + 10 + 10, 5, 20, get_bit(debug->latch[i], 2) ? ON_COLOR : OFF_COLOR);
+				DrawRectangle(shx + 10, 5 + 5 + 10 + 5 + 10 + 5 + 20 + 5, 20, 5, get_bit(debug->latch[i], 3) ? ON_COLOR : OFF_COLOR);
+				DrawRectangle(shx + 5, 5 + 5 + 10 + 5 + 10 + 10 + 5 + 20, 5, 20, get_bit(debug->latch[i], 4) ? ON_COLOR : OFF_COLOR);
+				DrawRectangle(shx + 5 + 20 + 5, 5 + 5 + 10 + 5 + 10 + 10 + 5 + 20, 5, 20, get_bit(debug->latch[i], 5) ? ON_COLOR : OFF_COLOR);
+				DrawRectangle(shx + 10, 5 + 5 + 10 + 5 + 10 + 5 + 20 + 5 + 20 + 5, 20, 5, get_bit(debug->latch[i], 6) ? ON_COLOR : OFF_COLOR);
+				DrawRectangle(shx + 5 + 5 + 20 + 5 + 5, 5 + 5 + 10 + 5 + 10 + 5 + 20 + 5 + 20 + 5, 5, 5, get_bit(debug->latch[i], 7) ? ON_COLOR : OFF_COLOR);
+			}
+		}
 
 		EndDrawing();
 	}

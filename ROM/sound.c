@@ -8,7 +8,7 @@ short psg_addr;
 short psg_data;
 
 void beep(void){
-	_beep(1L * 1024);
+	_beep(1L * 1024 / 2);
 }
 
 void _beep(unsigned long howlong){

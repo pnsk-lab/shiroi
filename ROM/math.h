@@ -3,10 +3,10 @@
 #ifndef __MATH_H__
 #define __MATH_H__
 
-void math_card(int t, int port);
+void math_card(int, int);
 
-long modl(long a, long b);
-long divl(long a, long b);
-long mull(long a, long b);
+long modl(long, long);
+long divl(long, long);
+long mull(long, long);
 
 #endif

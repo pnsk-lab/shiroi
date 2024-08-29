@@ -3,7 +3,7 @@
 .PHONY: all clean
 .SUFFIXES: .c .rel
 
-OBJS = shiroi.rel basic.rel io.rel char.rel math.rel text.rel video.rel sound.rel
+OBJS = shiroi.rel basic.rel io.rel char.rel math.rel text.rel video.rel sound.rel debug.rel
 
 all: shiroi.rom
 

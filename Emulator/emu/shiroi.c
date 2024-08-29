@@ -7,10 +7,12 @@
 #include "card/shiroi_sound_mk_i.h"
 #include "card/shiroi_math_mk_i.h"
 #include "card/shiroi_text_mk_i.h"
+#include "card/shiroi_debug.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 float audio[480];
 int16_t incre = 0;
@@ -59,6 +61,15 @@ shiroi_card_t* shiroi_get_text_card(shiroi_t* shiroi) {
 	return NULL;
 }
 
+shiroi_card_t* shiroi_get_debug_card(shiroi_t* shiroi) {
+	int i;
+	for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
+		if(shiroi->cards[i].type == 0) continue;
+		if(shiroi->cards[i].type == SHIROI_DEBUG) return &shiroi->cards[i];
+	}
+	return NULL;
+}
+
 void shiroi_init_cards(shiroi_t* shiroi) {
 	int i;
 	for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
@@ -77,6 +88,8 @@ void shiroi_install(shiroi_t* shiroi, int slot, int card) {
 		shiroi_math_mk_i_install(shiroi, slot);
 	} else if(card == SHIROI_TEXT_MARK_I) {
 		shiroi_text_mk_i_install(shiroi, slot);
+	} else if(card == SHIROI_DEBUG) {
+		shiroi_debug_install(shiroi, slot);
 	}
 }
 
@@ -93,6 +106,8 @@ void shiroi_reset_card(shiroi_t* shiroi, int slot) {
 		shiroi_math_mk_i_reset(shiroi, slot);
 	} else if(card == SHIROI_TEXT_MARK_I) {
 		shiroi_text_mk_i_reset(shiroi, slot);
+	} else if(card == SHIROI_DEBUG) {
+		shiroi_debug_reset(shiroi, slot);
 	}
 }
 
@@ -112,6 +127,10 @@ void shiroi_init(shiroi_t* shiroi) {
 void shiroi_loop(shiroi_t* shiroi) {
 	int x = 0;
 	int y = 0;
+#ifdef ACCURATE_CLOCK
+	double hz = 1000000000 / (20 * 1024 * 1024);
+	struct timespec deadline;
+#endif
 	while(!shiroi->stop || shiroi->reset) {
 		if(shiroi->reset) {
 			z80_reset(&shiroi->z80);
@@ -124,6 +143,14 @@ void shiroi_loop(shiroi_t* shiroi) {
 			for(i = 0; i < 480; i++) audio[i] = 0;
 			continue;
 		}
+#ifdef ACCURATE_CLOCK
+		clock_gettime(CLOCK_MONOTONIC, &deadline);
+		deadline.tv_nsec += hz;
+		if(deadline.tv_nsec >= 1000000000) {
+			deadline.tv_nsec -= 1000000000;
+			deadline.tv_sec++;
+		}
+#endif
 		shiroi->z80_pins = z80_tick(&shiroi->z80, shiroi->z80_pins);
 		if(shiroi->z80_pins & Z80_MREQ) {
 			uint16_t addr = Z80_GET_ADDR(shiroi->z80_pins);
@@ -148,6 +175,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 				shiroi_sound_mk_i(shiroi);
 				shiroi_math_mk_i(shiroi);
 				shiroi_text_mk_i(shiroi);
+				shiroi_debug(shiroi);
 			}
 		}
 
@@ -156,5 +184,9 @@ void shiroi_loop(shiroi_t* shiroi) {
 		shiroi_sound_mk_i_tick(shiroi);
 		shiroi_math_mk_i_tick(shiroi);
 		shiroi_text_mk_i_tick(shiroi);
+		shiroi_debug_tick(shiroi);
+#ifdef ACCURATE_CLOCK
+		clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
+#endif
 	}
 }

@@ -13,6 +13,8 @@ unsigned short posx;
 unsigned short posy;
 unsigned short curx;
 unsigned short cury;
+unsigned char cursorcolor;
+unsigned char cursorindex;
 
 short text_kbd_data;
 
@@ -21,6 +23,22 @@ extern int scrheight;
 
 extern unsigned char keylist[];
 extern unsigned char keylist_caps[];
+
+char agetch(void){
+	char k;
+rep:
+	if((k = inp(text_kbd_data)) == 0) return 0;
+	while(inp(text_kbd_data) != 0);
+	unsigned char top = (k & 0xf0) >> 4;
+	unsigned char bot = (k & 0x0f);
+	top--;
+	bot--;
+	if(keylist[top * 13 + bot] == '!'){
+		caps = caps == 0 ? 1 : 0;
+		goto rep;
+	}
+	return caps ? keylist_caps[top * 13 + bot] : keylist[top * 13 + bot];
+}
 
 char getch(void){
 	char k = 0;
@@ -72,7 +90,13 @@ void print_ptr(void* ptr){
 
 void cursor(void){
 	setvramaddr(mull(posy, scrwidth) + posx);
-	vramchar(248);
+	_vramchar(136 + 8 * cursorcolor);
+	cursorindex++;
+	if(cursorindex == 2){
+		cursorcolor++;
+		cursorindex = 0;
+		if(cursorcolor == 15) cursorcolor = 0;
+	}
 	curx = posx;
 	cury = posy;
 	if(curx == scrwidth){
@@ -118,6 +142,8 @@ void text_init(void){
 	curx = 0;
 	cury = 0;
 	caps = 0;
+	cursorcolor = 0;
+	cursorindex = 0;
 }
 
 void text_card(int t, int port){

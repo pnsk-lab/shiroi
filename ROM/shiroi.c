@@ -1,10 +1,13 @@
 /* $Id$ */
 
 #include "io.h"
+
 #include "math.h"
 #include "sound.h"
 #include "video.h"
 #include "text.h"
+#include "debug.h"
+
 #include "char.h"
 
 void init_cards(void);
@@ -17,6 +20,9 @@ extern short vdg_data;
 
 extern short psg_addr;
 extern short psg_data;
+
+extern short debug_addr;
+extern short debug_data;
 
 extern short fpu_stack;
 extern short fpu_command;
@@ -88,6 +94,7 @@ void main(void){
 	vdp_addr = -1;
 	vdg_addr = -1;
 	psg_addr = -1;
+	debug_addr = -1;
 	fpu_stack = -1;
 	text_kbd_data = -1;
 
@@ -100,9 +107,9 @@ void main(void){
 #endif
 		int i;
 		for(i = 0; i < 3; i++){
-			_beep(3L * 1024);
+			_beep(1L * 1024 / 2);
 			unsigned long j;
-			for(j = 0; j < 3L * 1024; j++);
+			for(j = 0; j < 1L * 1024 / 2; j++);
 		}
 		while(1);
 	}
@@ -205,7 +212,7 @@ move_bar:
 		move++;
 		if(move == 15) move = 0;
 	}
-	for(i = 0; i < 3 * 1024; i++);
+	for(i = 0; i < 3 * 1024 / 16; i++);
 
 skip:
 	if((k = inp(text_kbd_data)) == 0) goto move_bar;
@@ -229,6 +236,7 @@ void init_cards(void){
 			sound_card(t, port);
 			math_card(t, port);
 			text_card(t, port);
+			debug_card(t, port);
 		}
 		port += 3;
 	}

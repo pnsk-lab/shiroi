@@ -16,6 +16,7 @@ I/O port (3n-1) returns the card type.
 		System:
 			0x1: Math Mark I
 			0x2: Text Mark I
+			0x3: Debug
 
 Video Mark I card maps itself to:
 	0: VDP address
@@ -41,3 +42,14 @@ Text Mark I card maps itself to:
 	9: Keyboard data
 	10: Empty
 	11: See above
+
+Debug card maps itself to:
+	12: Address
+	13: LED
+		Bit to 7-segment map:
+		 0
+		1 2
+		 3
+		4 5
+		 6 7
+	14: See above
