@@ -2,7 +2,7 @@
 
 #include "math.h"
 
-#include "io.h"
+#include "../io.h"
 
 #define AM_SR       0x80 /* service request on completion */
 #define AM_SINGLE   0x60 /* 16 bit integer */

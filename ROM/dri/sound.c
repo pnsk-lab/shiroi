@@ -2,7 +2,7 @@
 
 #include "sound.h"
 
-#include "io.h"
+#include "../io.h"
 
 short psg_addr;
 short psg_data;

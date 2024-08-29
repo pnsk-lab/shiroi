@@ -2,8 +2,8 @@
 
 #include "video.h"
 
-#include "io.h"
-#include "char.h"
+#include "../char.h"
+#include "../io.h"
 
 int scrwidth;
 int scrheight;

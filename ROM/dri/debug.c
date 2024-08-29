@@ -2,7 +2,7 @@
 
 #include "debug.h"
 
-#include "io.h"
+#include "../io.h"
 
 short debug_addr;
 short debug_data;

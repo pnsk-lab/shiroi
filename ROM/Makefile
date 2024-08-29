@@ -3,7 +3,8 @@
 .PHONY: all clean
 .SUFFIXES: .c .rel
 
-OBJS = shiroi.rel basic.rel io.rel char.rel math.rel text.rel video.rel sound.rel debug.rel
+OBJS = shiroi.rel basic.rel io.rel char.rel
+OBJS += dri/math.rel dri/text.rel dri/video.rel dri/sound.rel dri/debug.rel
 
 all: shiroi.rom
 
@@ -23,7 +24,7 @@ Discard/shiroi.ihx: $(OBJS)
 .c.rel:
 	mkdir -p Discard
 	sdcc -DONLY_VDP -c -mz80 -o $@ --no-std-crt0 --nostdinc --nostdlib $<
-	rm -f "`echo $< | sed -E 's/\.c/.asm/g'`" "`echo $< | sed -E 's/\.c/.sym/g'`" "`echo $< | sed -E 's/\.c/.lst/g'`"
+	rm -f "`echo $< | sed -E 's/\.c$$/.asm/g'`" "`echo $< | sed -E 's/\.c$$/.sym/g'`" "`echo $< | sed -E 's/\.c$$/.lst/g'`"
 
 Discard/font.ihx: font.asm
 	mkdir -p Discard
@@ -31,4 +32,4 @@ Discard/font.ihx: font.asm
 	sdldz80 -i $@ Discard/font.rel
 
 clean:
-	rm -rf Discard *.o *.bin *.rom *.rel
+	rm -rf Discard *.o *.bin *.rom *.rel */*.rel

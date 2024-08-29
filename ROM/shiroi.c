@@ -2,11 +2,11 @@
 
 #include "io.h"
 
-#include "math.h"
-#include "sound.h"
-#include "video.h"
-#include "text.h"
-#include "debug.h"
+#include "dri/math.h"
+#include "dri/sound.h"
+#include "dri/video.h"
+#include "dri/text.h"
+#include "dri/debug.h"
 
 #include "char.h"
 
@@ -105,7 +105,6 @@ void main(void){
 #else
 	if(vdp_addr == -1 && vdg_addr == -1){
 #endif
-		int i;
 		debug_number(0x0001);
 		while(1);
 	}

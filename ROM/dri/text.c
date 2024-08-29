@@ -2,10 +2,11 @@
 
 #include "text.h"
 
-#include "char.h"
 #include "video.h"
 #include "math.h"
-#include "io.h"
+
+#include "../char.h"
+#include "../io.h"
 
 char caps;
 

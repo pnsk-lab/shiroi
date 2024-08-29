@@ -1,6 +1,6 @@
 /* $Id$ */
 
-#include "text.h"
+#include "dri/text.h"
 
 unsigned char basicbuffer[1024 * 30];
 
