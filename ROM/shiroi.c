@@ -107,11 +107,6 @@ void main(void){
 #endif
 		int i;
 		debug_number(0x0001);
-		for(i = 0; i < 3; i++){
-			_beep(1L * 1024);
-			unsigned long j;
-			for(j = 0; j < 1L * 1024; j++);
-		}
 		while(1);
 	}
 
