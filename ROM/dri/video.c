@@ -2,6 +2,8 @@
 
 #include "video.h"
 
+#include "math.h"
+
 #include "../char.h"
 #include "../io.h"
 
@@ -90,14 +92,28 @@ void _vramchar(unsigned char c){
 
 unsigned char getvramchar(void){
 	if(vdp_addr != -1){
-		return inp(vdp_data);
+		return inp(vdp_data) + 0x20;
 	}
 #ifndef ONLY_VDP
 	else if(vdg_addr != -1){
-		return inp(vdg_data);
+		return inp(vdg_data) - 1 + 'A';
 	}
 #endif
 	return 0;
+}
+
+void scroll_y(void){
+	int i;
+	int size = muli(scrwidth, scrheight - 1);
+	for(i = 0; i < size; i++){
+		setreadvramaddr(i + scrwidth);
+		unsigned char ch = getvramchar();
+		setvramaddr(i);
+		vramchar(ch);
+	}
+	for(i = 0; i < scrwidth; i++){
+		vramchar(' ');
+	}
 }
 
 void video_init(void){

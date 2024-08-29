@@ -9,7 +9,6 @@ void text_card(int, int);
 void clear(void);
 void putchar(char);
 void putstr(char*);
-void scroll_y(void);
 void print_ptr(void*);
 char agetch(void);
 char getch(void);

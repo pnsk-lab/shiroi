@@ -64,20 +64,6 @@ void clear(void){
 	for(i = 0; i < size; i++) vramchar(' ');
 }
 
-void scroll_y(void){
-	int i;
-	int size = muli(scrwidth, scrheight - 1);
-	for(i = 0; i < size; i++){
-		setreadvramaddr(i + 32);
-		unsigned char ch = getvramchar();
-		setvramaddr(i);
-		vramchar(ch);
-	}
-	for(i = 0; i < scrwidth; i++){
-		vramchar(' ');
-	}
-}
-
 void print_ptr(void* ptr){
 	unsigned short p = (unsigned short)ptr;
 	int i;

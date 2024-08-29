@@ -77,7 +77,7 @@ void shiroi_video_mk_i_tick(shiroi_t* shiroi) {
 	for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
 		if(shiroi->cards[i].type == SHIROI_VIDEO_MARK_I) {
 			shiroi->cards[i].video.tick++;
-			if(shiroi->cards[i].video.tick == 256) {
+			if(shiroi->cards[i].video.tick == 1024) {
 				shiroi->cards[i].video.tick = 0;
 				for(y = 0; y < TMS9918_PIXELS_Y; y++) {
 					vrEmuTms9918ScanLine(shiroi->cards[i].video.vdp, y, scanline);

@@ -128,7 +128,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 	int x = 0;
 	int y = 0;
 #ifdef ACCURATE_CLOCK
-	double hz = 1000000000 / (20 * 1024 * 1024);
+	double hz = 1000000000.0 / (20 * 1024 * 1024);
 	struct timespec deadline;
 #endif
 	while(!shiroi->stop || shiroi->reset) {

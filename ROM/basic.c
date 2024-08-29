@@ -8,6 +8,7 @@ void basic(void){
 	clear();
 
 	putstr("Shiroi Microcomputer BASIC\r\n");
+	putstr("Copyright 2024 by Nishi\r\n");
 	cursor();
 	while(1){
 		char c = agetch();

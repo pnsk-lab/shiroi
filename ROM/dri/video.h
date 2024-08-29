@@ -11,6 +11,7 @@ void read_vram(unsigned short);
 void setvramaddr(unsigned short);
 void setreadvramaddr(unsigned short);
 void vramchar(unsigned char);
+void scroll_y(void);
 void _vramchar(unsigned char);
 unsigned char getvramchar(void);
 
