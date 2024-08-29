@@ -1,1 +1,6 @@
 Shiroi is a 8-bit (maybe 16-bit) microcomputer project
+
+This repository includes the emulator ; it is powered by:
+1. chips: https://github.com/floooh/chips
+2. vrEmuTms9918: https://github.com/visrealm/vrEmuTms9918
+3. am9511: https://github.com/ratboy666/am9511
