@@ -10,10 +10,10 @@
 
 char caps;
 
-unsigned short posx;
-unsigned short posy;
-unsigned short curx;
-unsigned short cury;
+short posx;
+short posy;
+short curx;
+short cury;
 unsigned char cursorcolor;
 unsigned char cursorindex;
 
@@ -79,6 +79,8 @@ void print_ptr(void* ptr){
 	}
 }
 
+unsigned short charbuf;
+
 void cursor(void){
 	setvramaddr(muli(posy, scrwidth) + posx);
 	_vramchar(136 + 8 * cursorcolor);
@@ -98,7 +100,11 @@ void cursor(void){
 
 void killcursor(void){
 	setvramaddr(muli(cury, scrwidth) + curx);
-	vramchar(' ');
+	if(charbuf == 0xffff){
+		vramchar(' ');
+	}else{
+		vramchar(charbuf & 0xff);
+	}
 }
 
 void putchar(char c){
@@ -106,6 +112,15 @@ void putchar(char c){
 		posx = 0;
 	}else if(c == '\n'){
 		posy++;
+	}else if(c == 0x08){
+		if(posx > 0){
+			posx--;
+		}else{
+			posy--;
+			posx = scrwidth - 1;
+		}
+		setreadvramaddr(muli(posy, scrwidth) + posx);
+		charbuf = getvramchar();
 	}else{
 		setvramaddr(muli(posy, scrwidth) + posx);
 		vramchar(c);
@@ -135,6 +150,7 @@ void text_init(void){
 	caps = 0;
 	cursorcolor = 0;
 	cursorindex = 0;
+	charbuf = 0xffff;
 }
 
 void text_card(int t, int port){
