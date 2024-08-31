@@ -19,7 +19,7 @@ void shiroi_video_mk_i_install(shiroi_t* shiroi, int slot) {
 	int x, y;
 	for(y = 0; y < TMS9918_PIXELS_Y; y++) {
 		for(x = 0; x < TMS9918_PIXELS_X; x++) {
-			shiroi->cards[slot].video.fb[y * TMS9918_PIXELS_X + x] = 0;
+			shiroi->cards[slot].video.fb[y * TMS9918_PIXELS_X + x];
 		}
 	}
 }

@@ -170,6 +170,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 
 			if(shiroi->z80_pins & Z80_M1) {
 			} else {
+				if(addr == 0x80) printf("%d\n", data);
 				shiroi_video_mk_i(shiroi);
 				shiroi_video_mk_ii(shiroi);
 				shiroi_sound_mk_i(shiroi);

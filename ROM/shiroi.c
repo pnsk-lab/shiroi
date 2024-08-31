@@ -109,6 +109,8 @@ void main(void){
 		while(1);
 	}
 
+	debug_number(0);
+
 	video_init();
 	text_init();
 
