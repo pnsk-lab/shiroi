@@ -14,8 +14,8 @@ void shiroi_debug_install(shiroi_t* shiroi, int slot) {
 }
 
 void shiroi_debug_reset(shiroi_t* shiroi, int slot) {
-	shiroi->cards[slot].text.key = 0;
-	shiroi->cards[slot].text.caps = false;
+	int i;
+	for(i = 0; i < 4; i++) shiroi->cards[slot].debug.latch[i] = 0xff;
 }
 
 void shiroi_debug(shiroi_t* shiroi) {

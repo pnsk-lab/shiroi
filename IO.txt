@@ -19,37 +19,37 @@ I/O port (3n-1) returns the card type.
 			0x3: Debug
 
 Video Mark I card maps itself to:
-	0: VDP address
-	1: VDP data
-	2: See above
+	+0: VDP address
+	+1: VDP data
+	+2: See above
 
 Video Mark II card maps itself to:
-	0: VDG VRAM address
-	1: VDG VRAM data
-	2: See above
+	+0: VDG VRAM address
+	+1: VDG VRAM data
+	+2: See above
 
 Sound Mark I card maps itself to:
-	3: PSG address
-	4: PSG data
-	5: See above
+	+0: PSG address
+	+1: PSG data
+	+2: See above
 
 Math Mark I card maps itself to:
-	6: AM9511 stack
-	7: AM9511 command (W) / AM9511 ready (R)
-	8: See above
+	+0: AM9511 stack
+	+1: AM9511 command (W) / AM9511 ready (R)
+	+2: See above
 
 Text Mark I card maps itself to:
-	9: Keyboard data
-	10: Empty
-	11: See above
+	+0: Keyboard data
+	+1: Empty
+	+2: See above
 
 Debug card maps itself to:
-	12: Address
-	13: LED
+	+0: Address
+	+1: LED
 		Bit to 7-segment map:
 		 0
 		1 2
 		 3
 		4 5
 		 6 7
-	14: See above
+	+2: See above

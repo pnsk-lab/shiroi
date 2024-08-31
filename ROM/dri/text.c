@@ -66,6 +66,8 @@ void clear(void){
 	int size = muli(scrwidth, scrheight);
 	setvramaddr(0);
 	for(i = 0; i < size; i++) vramchar(' ');
+	posx = 0;
+	posy = 0;
 }
 
 void print_ptr(void* ptr){
@@ -140,6 +142,19 @@ void putchar(char c){
 void putstr(char* str){
 	int i;
 	for(i = 0; str[i] != 0; i++) putchar(str[i]);
+}
+
+void putnum(int num){
+	int i;
+	char buffer[513];
+	buffer[512] = 0;
+	int incr = 511;
+	while(1){
+		buffer[incr--] = '0' + modl(num, 10);
+		num = divl(num, 10);
+		if(num == 0) break;
+	}
+	putstr(buffer + incr + 1);
 }
 
 void text_init(void){
