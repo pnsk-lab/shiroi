@@ -185,7 +185,7 @@ int main(int argc, char** argv) {
 			 * 1 1 2 3 4 5 6 7 8 9 0  -  =  bs
 			 * 2 q w e r t y u i o p  [  ]  rt
 			 * 3 a s d f g h j k l ;  '  \  cl
-			 * 4 z x c v b n m , . /  sp
+			 * 4 z x c v b n m , . /  sp bk
 			 */
 			int c = GetKeyPressed();
 			if(KEY_ONE <= c && c <= KEY_NINE) {
@@ -233,6 +233,8 @@ int main(int argc, char** argv) {
 				text->key = (4 << 4) | 10;
 			} else if(c == KEY_SPACE) {
 				text->key = (4 << 4) | 11;
+			} else if((IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) && c == KEY_PAUSE) {
+				text->key = (4 << 4) | 12;
 			} else if(c == KEY_Q) {
 				text->key = (2 << 4) | 1;
 			} else if(c == KEY_W) {

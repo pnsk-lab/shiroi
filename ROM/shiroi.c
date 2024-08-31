@@ -45,7 +45,7 @@ void main(void){
  * 1 1 2 3 4 5 6 7 8 9 0  -  =  bs
  * 2 q w e r t y u i o p  [  ]  rt
  * 3 a s d f g h j k l ;  '  \  cl
- * 4 z x c v b n m , . /  sp
+ * 4 z x c v b n m , . /  sp bk
  *
  * When Caps Lock
  *
@@ -53,7 +53,7 @@ void main(void){
  * 1 ! @ # $ % ^ & * ( )  _  +  bs
  * 2 Q W E R T Y U I O P  {  }  rt
  * 3 A S D F G H J K L :  "  |  cl
- * 4 Z X C V B N M < > ?  sp
+ * 4 Z X C V B N M < > ?  sp bk
  */
 	const char* keys;
 
@@ -69,7 +69,7 @@ void main(void){
 	for(i = 0; i < 13; i++){
 		keylist[26 + i] = keys[i];
 	}
-	keys = "zxcvbnm,./    ";
+	keys = "zxcvbnm,./ ?  ";
 	for(i = 0; i < 13; i++){
 		keylist[39 + i] = keys[i];
 	}
@@ -86,7 +86,7 @@ void main(void){
 	for(i = 0; i < 13; i++){
 		keylist_caps[26 + i] = keys[i];
 	}
-	keys = "ZXCVBNM<>?    ";
+	keys = "ZXCVBNM<>? ?  ";
 	for(i = 0; i < 13; i++){
 		keylist_caps[39 + i] = keys[i];
 	}

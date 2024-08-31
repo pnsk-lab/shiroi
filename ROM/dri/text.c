@@ -37,6 +37,8 @@ rep:
 	if(keylist[top * 13 + bot] == '!'){
 		caps = caps == 0 ? 1 : 0;
 		goto rep;
+	}else if(keylist[top * 13 + bot] == '?'){
+		return 1;
 	}
 	return caps ? keylist_caps[top * 13 + bot] : keylist[top * 13 + bot];
 }
@@ -53,6 +55,8 @@ rep:
 	if(keylist[top * 13 + bot] == '!'){
 		caps = caps == 0 ? 1 : 0;
 		goto rep;
+	}else if(keylist[top * 13 + bot] == '?'){
+		return 1;
 	}
 	return caps ? keylist_caps[top * 13 + bot] : keylist[top * 13 + bot];
 }

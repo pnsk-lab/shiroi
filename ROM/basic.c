@@ -12,11 +12,12 @@ void basic(void){
 	cursor();
 	while(1){
 		char c = agetch();
-		if(c == '\n'){
-			killcursor();
+		if(c != 0) killcursor();
+		if(c == 1){
+			putstr("Break\r\n");
+		}else if(c == '\n'){
 			putstr("\r\n");
 		}else if(c != 0){
-			killcursor();
 			putchar(c);
 		}
 		cursor();
