@@ -66,13 +66,13 @@ typedef struct {
 } shiroi_debug_t;
 
 typedef struct {
-//	union {
+	union {
 		shiroi_video_t video;
 		shiroi_sound_t sound;
 		shiroi_math_t math;
 		shiroi_text_t text;
 		shiroi_debug_t debug;
-//	};
+	};
 	shiroi_video_t* videoptr;
 	shiroi_sound_t* soundptr;
 	shiroi_math_t* mathptr;

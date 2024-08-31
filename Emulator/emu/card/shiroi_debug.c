@@ -35,7 +35,6 @@ void shiroi_debug(shiroi_t* shiroi) {
 			} else if(shiroi->z80_pins & Z80_WR) {
 				/* I/O Write */
 				if(addr == 12) {
-					printf("!\n");
 					shiroi->cards[i].debug.latch_addr = data;
 				} else if(addr == 13) {
 					shiroi->cards[i].debug.latch[shiroi->cards[i].debug.latch_addr] = data;

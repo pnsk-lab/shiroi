@@ -21,6 +21,11 @@ Discard/shiroi.ihx: $(OBJS)
 	mkdir -p Discard
 	sdcc -mz80 -o $@ --data-loc 0x8000 --idata-loc 0x8000 --code-loc 0 --stack-loc 0x9000 --no-std-crt0 --nostdinc --nostdlib $(OBJS)
 
+io.rel: io.asm
+	mkdir -p Discard
+	sdasz80 -o io.rel io.asm
+	rm -f "`echo $< | sed -E 's/\.asm$$/.sym/g'`" "`echo $< | sed -E 's/\.asm$$/.lst/g'`"
+
 .c.rel:
 	mkdir -p Discard
 	sdcc -DONLY_VDP2 -c -mz80 -o $@ --no-std-crt0 --nostdinc --nostdlib $<
