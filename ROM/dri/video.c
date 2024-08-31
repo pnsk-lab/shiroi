@@ -102,6 +102,19 @@ unsigned char getvramchar(void){
 	return 0;
 }
 
+void thin_char(void){
+	if(vdp_addr != -1){
+		scrwidth = 40;
+		scrheight = 24;
+
+		outp(vdp_addr, 0xd0);
+		outp(vdp_addr, 0x81);
+
+		outp(vdp_addr, 0xf4);
+		outp(vdp_addr, 0x87);
+	}
+}
+
 void scroll_y(void){
 	int i;
 	int size = muli(scrwidth, scrheight - 1);

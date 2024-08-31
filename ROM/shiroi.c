@@ -116,18 +116,23 @@ void main(void){
 
 	beep();
 
+	char hlt = 0;
 	if(text_kbd_data == -1){
 		debug_number(0x0002);
+		thin_char();
 		putstr("Text  Card Mark I not present\r\n");
-		putstr("Text  Card Mark I is required to use the BASIC\r\n");
-		putstr("Halted. Get one.\r\n");
-		while(1);
+		putstr("Text  Card Mark I is required to use\r\nthe BASIC\r\n\r\n");
+		hlt = 1;
 	}
 	if(fpu_stack == -1){
-		debug_number(0x0003);
+		debug_number(hlt == 1 ? 0x0023 : 0x0003);
+		thin_char();
 		putstr("Math  Card Mark I not present\r\n");
-		putstr("Math  Card Mark I is required to use the BASIC\r\n");
-		putstr("Halted. Get one.\r\n");
+		putstr("Math  Card Mark I is required to use\r\nthe BASIC\r\n\r\n");
+		hlt = 1;
+	}
+	if(hlt == 1){
+		putstr("Halted.\r\n");
 		while(1);
 	}
 
