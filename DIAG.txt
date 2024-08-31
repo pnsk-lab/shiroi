@@ -6,3 +6,4 @@ Debug card can be used to diagnose what is wrong with your Shiroi. (at least in 
 0x0001: Video card is missing.
 0x0002: Text card is missing.
 0x0003: Math card is missing.
+0x0023: Text card and Math card are missing.
