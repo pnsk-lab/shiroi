@@ -23,7 +23,8 @@ enum SHIROI_CARD {
 	SHIROI_SYSTEM = 0x20,
 	SHIROI_MATH_MARK_I,
 	SHIROI_TEXT_MARK_I,
-	SHIROI_DEBUG
+	SHIROI_DEBUG,
+	SHIROI_ROMCARD_MARK_I
 };
 
 typedef struct {
@@ -66,18 +67,25 @@ typedef struct {
 } shiroi_debug_t;
 
 typedef struct {
+	unsigned char* data;
+	int latch_addr;
+} shiroi_romcard_t;
+
+typedef struct {
 	union {
 		shiroi_video_t video;
 		shiroi_sound_t sound;
 		shiroi_math_t math;
 		shiroi_text_t text;
 		shiroi_debug_t debug;
+		shiroi_romcard_t romcard;
 	};
 	shiroi_video_t* videoptr;
 	shiroi_sound_t* soundptr;
 	shiroi_math_t* mathptr;
 	shiroi_text_t* textptr;
 	shiroi_debug_t* debugptr;
+	shiroi_romcard_t* romcardptr;
 	int type;
 } shiroi_card_t;
 
@@ -100,5 +108,6 @@ shiroi_card_t* shiroi_get_sound_card(shiroi_t* shiroi);
 shiroi_card_t* shiroi_get_math_card(shiroi_t* shiroi);
 shiroi_card_t* shiroi_get_text_card(shiroi_t* shiroi);
 shiroi_card_t* shiroi_get_debug_card(shiroi_t* shiroi);
+shiroi_card_t* shiroi_get_romcard_card(shiroi_t* shiroi);
 
 #endif

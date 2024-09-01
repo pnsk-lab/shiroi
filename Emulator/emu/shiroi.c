@@ -8,6 +8,7 @@
 #include "card/shiroi_math_mk_i.h"
 #include "card/shiroi_text_mk_i.h"
 #include "card/shiroi_debug.h"
+#include "card/shiroi_romcard_mk_i.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,6 +71,15 @@ shiroi_card_t* shiroi_get_debug_card(shiroi_t* shiroi) {
 	return NULL;
 }
 
+shiroi_card_t* shiroi_get_romcard_card(shiroi_t* shiroi) {
+	int i;
+	for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
+		if(shiroi->cards[i].type == 0) continue;
+		if(shiroi->cards[i].type == SHIROI_ROMCARD_MARK_I) return &shiroi->cards[i];
+	}
+	return NULL;
+}
+
 void shiroi_init_cards(shiroi_t* shiroi) {
 	int i;
 	for(i = 0; i < 256 / SHIROI_IO_PORTS; i++) {
@@ -90,6 +100,8 @@ void shiroi_install(shiroi_t* shiroi, int slot, int card) {
 		shiroi_text_mk_i_install(shiroi, slot);
 	} else if(card == SHIROI_DEBUG) {
 		shiroi_debug_install(shiroi, slot);
+	} else if(card == SHIROI_ROMCARD_MARK_I) {
+		shiroi_romcard_mk_i_install(shiroi, slot);
 	}
 }
 
@@ -108,6 +120,8 @@ void shiroi_reset_card(shiroi_t* shiroi, int slot) {
 		shiroi_text_mk_i_reset(shiroi, slot);
 	} else if(card == SHIROI_DEBUG) {
 		shiroi_debug_reset(shiroi, slot);
+	} else if(card == SHIROI_ROMCARD_MARK_I) {
+		shiroi_romcard_mk_i_reset(shiroi, slot);
 	}
 }
 
@@ -179,6 +193,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 				shiroi_math_mk_i(shiroi);
 				shiroi_text_mk_i(shiroi);
 				shiroi_debug(shiroi);
+				shiroi_romcard_mk_i(shiroi);
 			}
 		}
 
@@ -188,6 +203,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 		shiroi_math_mk_i_tick(shiroi);
 		shiroi_text_mk_i_tick(shiroi);
 		shiroi_debug_tick(shiroi);
+		shiroi_romcard_mk_i_tick(shiroi);
 #ifdef ACCURATE_CLOCK
 		clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
 #endif

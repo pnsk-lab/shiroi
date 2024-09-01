@@ -17,6 +17,7 @@ I/O port (3n-1) returns the card type.
 			0x1: Math Mark I
 			0x2: Text Mark I
 			0x3: Debug
+			0x4: ROMcard Mark I
 
 Video Mark I card maps itself to:
 	+0: VDP address
@@ -52,4 +53,9 @@ Debug card maps itself to:
 		 3
 		4 5
 		 6 7
+	+2: See above
+
+ROMcard Mark I card maps itself to:
+	+0: Address (Holds 24 bit address inside, gets left shifted by each write)
+	+1: Data
 	+2: See above

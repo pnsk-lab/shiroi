@@ -76,6 +76,22 @@ int main(int argc, char** argv) {
 							FILE* f = fopen(line + j + 1, "rb");
 							fread(shiroi.ram, s.st_size, 1, f);
 							fclose(f);
+						} else if(strcmp(line, "romcard") == 0) {
+							printf("ROMcard: %s\n", line + j + 1);
+							if(stat(line + j + 1, &s) != 0) {
+								fprintf(stderr, "ROM not found\n");
+								free(ini);
+								return 1;
+							}
+							printf("ROMcard size: %d\n", s.st_size);
+							shiroi_card_t* card = shiroi_get_romcard_card(&shiroi);
+							if(card != NULL) {
+								FILE* f = fopen(line + j + 1, "rb");
+								fread(card->romcard.data, s.st_size, 1, f);
+								fclose(f);
+							} else {
+								fprintf(stderr, "ROMcard is not installed ; ignored\n");
+							}
 						} else if(line[0] == 's' && line[1] == 'l' && line[2] == 'o' && line[3] == 't') {
 							int slot = atoi(line + 4);
 							const char* n = "";
@@ -98,6 +114,9 @@ int main(int argc, char** argv) {
 							} else if(strcmp(line + j + 1, "debug") == 0) {
 								dev = SHIROI_DEBUG;
 								n = "Debug";
+							} else if(strcmp(line + j + 1, "romcard_mark_1") == 0) {
+								dev = SHIROI_ROMCARD_MARK_I;
+								n = "ROMcard Mark I";
 							}
 							if(dev == -1) {
 								fprintf(stderr, "No such device called `%s' ; ignoring\n", line + j + 1);
