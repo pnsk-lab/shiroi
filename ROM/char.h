@@ -5,6 +5,7 @@
 
 char toupper(char);
 int strlen(const char*);
+int strnum(const char*);
 char strequ(const char*, const char*);
 char strcaseequ(const char*, const char*);
 

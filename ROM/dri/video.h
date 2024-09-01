@@ -6,6 +6,7 @@
 void video_init(void);
 void video_card(int, int);
 
+void change_color(unsigned char);
 void thin_char(void);
 void write_vram(unsigned short);
 void read_vram(unsigned short);

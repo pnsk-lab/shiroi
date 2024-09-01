@@ -149,10 +149,16 @@ void putnum(int num){
 	char buffer[513];
 	buffer[512] = 0;
 	int incr = 511;
+	char m = num < 0 ? 1 : 0;
 	while(1){
-		buffer[incr--] = '0' + modl(num, 10);
+		int l = modl(num, 10);
+		if(l < 0) l = -l;
+		buffer[incr--] = '0' + l;
 		num = divl(num, 10);
 		if(num == 0) break;
+	}
+	if(m == 1){
+		buffer[incr--] = '-';
 	}
 	putstr(buffer + incr + 1);
 }

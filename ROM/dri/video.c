@@ -53,6 +53,22 @@ void setvramaddr(unsigned short addr){
 #endif
 }
 
+void change_color(unsigned char color){
+	if(vdp_addr != -1){
+		outp(vdp_addr, color);
+		outp(vdp_addr, 0x87);
+		int i;
+		write_vram(0x1400);
+		for(i = 0; i < 0x10; i++) outp(vdp_data, color);
+		write_vram(0x1400 + 0x10);
+		for(i = 0; i < 0x10; i++) outp(vdp_data, ((i & 0xf) << 4) | 1);
+	}
+#ifndef ONLY_VDP
+	else if(vdg_addr != -1){
+	}
+#endif
+}
+
 void setreadvramaddr(unsigned short addr){
 	if(vdp_addr != -1){
 		read_vram(0x800 + addr);
@@ -155,9 +171,6 @@ void video_init(void){
 	
 		outp(vdp_addr, 0x03);
 		outp(vdp_addr, 0x86);
-	
-		outp(vdp_addr, 0xe4);
-		outp(vdp_addr, 0x87);
 		
 		/*
 		 * VDP:
@@ -170,11 +183,8 @@ void video_init(void){
 	
 		write_vram(0);
 		for(i = 0; i < 0x800; i++) outp(vdp_data, *((unsigned char*)(0x6000 - 2048 + i)));
-	
-		write_vram(0x1400);
-		for(i = 0; i < 0x20; i++) outp(vdp_data, 0xf0);
-		write_vram(0x1400 + 0x10);
-		for(i = 0; i < 0x10; i++) outp(vdp_data, ((i & 0xf) << 4) | 0);
+
+		change_color(0xf4);
 	}
 #ifndef ONLY_VDP
 	else if(vdg_addr != -1){

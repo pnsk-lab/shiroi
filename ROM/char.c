@@ -24,6 +24,16 @@ char strequ(const char* a, const char* b){
 	return 1;
 }
 
+int strnum(const char* str){
+	int i = 0;
+	int num = 0;
+	for(i = strlen(str) - 1; i >= 0; i--){
+		num = num * 10;
+		num += str[i] - '0';
+	}
+	return num;
+}
+
 char strcaseequ(const char* a, const char* b){
 	if(strlen(a) != strlen(b)) return 0;
 	int i;

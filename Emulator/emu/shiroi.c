@@ -161,7 +161,7 @@ void shiroi_loop(shiroi_t* shiroi) {
 				if(addr >= 0x8000) {
 					uint8_t data = Z80_GET_DATA(shiroi->z80_pins);
 					shiroi->ram[addr] = data;
-				}else{
+				} else {
 					fprintf(stderr, "Illegal write at 0x%X\n", addr);
 				}
 			}
@@ -169,7 +169,6 @@ void shiroi_loop(shiroi_t* shiroi) {
 			uint16_t io = Z80_GET_ADDR(shiroi->z80_pins);
 			uint16_t addr = io & 0xff;
 			uint16_t data = (io >> 8) & 0xff;
-
 
 			if(shiroi->z80_pins & Z80_M1) {
 			} else {
