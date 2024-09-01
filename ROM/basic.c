@@ -54,7 +54,7 @@ void putstr(const char* n){
 }
 
 void clear(void){
-	printf("\x1b[2J");
+	printf("\x1b[2J\x1b[1;1H");
 	fflush(stdout);
 }
 
