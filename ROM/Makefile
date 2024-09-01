@@ -12,9 +12,11 @@ shiroi.rom: shiroi.bin font.bin
 	cat shiroi.bin font.bin > shiroi.rom
 
 shiroi.bin: Discard/shiroi.ihx
+	mkdir -p Discard
 	makebin -s 22528 Discard/shiroi.ihx shiroi.bin
 
 font.bin: Discard/font.ihx
+	mkdir -p Discard
 	makebin -s 2048 Discard/font.ihx font.bin
 
 Discard/shiroi.ihx: $(OBJS)
