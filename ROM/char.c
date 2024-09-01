@@ -27,7 +27,7 @@ char strequ(const char* a, const char* b){
 int strnum(const char* str){
 	int i = 0;
 	int num = 0;
-	for(i = strlen(str) - 1; i >= 0; i--){
+	for(i = 0; str[i] != 0; i++){
 		num = num * 10;
 		num += str[i] - '0';
 	}

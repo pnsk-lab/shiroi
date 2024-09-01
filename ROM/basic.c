@@ -61,10 +61,33 @@ int pexpr(char* expr, char* buffer, int* number){
 	return 1;
 }
 
-int run(char* cmd, int linenum, char num){
+/* arr gets sorted, arr2 index gets replaced */
+void sort(int* arr, int* arr2, int size){
+	int i;
+redo:
+	for(i = 1; i < size; i++){
+		if(arr[i - 1] > arr[i]){
+			int tmp = arr[i];
+			arr[i] = arr[i - 1];
+			arr[i - 1] = tmp;
+			tmp = arr2[i];
+			arr2[i] = arr2[i - 1];
+			arr2[i - 1] = tmp;
+		}
+	}
+	for(i = 1; i < size; i++){
+		if(arr[i - 1] > arr[i]){
+			goto redo;
+		}
+	}
+}
+
+int run(char* cmd, int linenum, char num, int* lgoto){
+	if(agetch() == 1) return -1;
 	char line[LINE_BUFFER_SIZE];
 	char rcmd[32];
 	int i;
+	if(lgoto != 0) *lgoto = 0;
 	for(i = 0; cmd[i] != 0; i++) line[i] = cmd[i];
 	line[i] = 0;
 	rcmd[0] = 0;
@@ -150,6 +173,94 @@ int run(char* cmd, int linenum, char num){
 			putstr("\r\n");
 			return 1;
 		}
+	}else if(num == 0 && strcaseequ(rcmd, "LIST")){
+		int addr = BUFFER_SIZE - 1;
+		int saddr = 0;
+		int lbuf[1024];
+		int shift[1024];
+		int cnt = 0;
+		while(1){
+			unsigned long ln = 0;
+			for(i = 0; i < 4; i++){
+				ln >>= 8;
+				ln |= (unsigned long)basicbuffer[addr--] << 24;
+			}
+			if(ln == 0) break;
+			lbuf[cnt] = ln;
+			shift[cnt++] = saddr;
+			saddr += strlen(basicbuffer + saddr) + 1;
+		}
+		sort(lbuf, shift, cnt);
+		int i;
+		for(i = 0; i < cnt; i++){
+			putnum(lbuf[i]);
+			putstr(" ");
+			putstr(basicbuffer + shift[i]);
+			putstr("\r\n");
+		}
+	}else if(num == 1 && strcaseequ(rcmd, "GOTO")){
+		int ret = pexpr(arg, 0, lgoto);
+		if(ret == 0){
+			putstr("! Invalid argument");
+			if(linenum != -1){
+				putstr(" in line ");
+				putnum(linenum);
+			}
+			putstr("\r\n");
+			return 1;
+		}else if(ret == -1){
+			putstr("! Syntax error");
+			if(linenum != -1){
+				putstr(" in line ");
+				putnum(linenum);
+			}
+			putstr("\r\n");
+			return 1;
+		}
+	}else if(num == 0 && strcaseequ(rcmd, "RUN")){
+		int addr = BUFFER_SIZE - 1;
+		int saddr = 0;
+		int lbuf[1024];
+		int shift[1024];
+		int cnt = 0;
+		int gt;
+		while(1){
+			unsigned long ln = 0;
+			for(i = 0; i < 4; i++){
+				ln >>= 8;
+				ln |= (unsigned long)basicbuffer[addr--] << 24;
+			}
+			if(ln == 0) break;
+			lbuf[cnt] = ln;
+			shift[cnt++] = saddr;
+			saddr += strlen(basicbuffer + saddr) + 1;
+		}
+		sort(lbuf, shift, cnt);
+		int i;
+		for(i = 0; i < cnt; i++){
+			int ret = run(basicbuffer + shift[i], lbuf[i], 1, &gt);
+			if(ret != 0) return ret;
+			if(gt != 0){
+				char found = 0;
+				for(i = 0; i < cnt; i++){
+					if(lbuf[i] == gt){
+						found = 1;
+						break;
+					}
+				}
+				if(found){
+					i--;
+				}else{
+					putstr("! GOTO no such line");
+					if(linenum != -1){
+						putstr(" in line ");
+						putnum(linenum);
+					}
+					putstr("\r\n");
+					return 1;
+				}
+			}
+		}
 	}else{
 		putstr("! Unknown command");
 		if(linenum != -1){
@@ -162,7 +273,7 @@ int run(char* cmd, int linenum, char num){
 	return 0;
 }
 
-void execute(int linenum, char* cmd, char num){
+int execute(int linenum, char* cmd, char num){
 	int i;
 	char line[LINE_BUFFER_SIZE];
 	int incr = 0;
@@ -183,8 +294,9 @@ void execute(int linenum, char* cmd, char num){
 	}
 	line[incr] = 0;
 	if(num == 0){
-		run(line, -1, 0);
+		int ret = run(line, -1, 0, 0);
 		putstr("Ready\r\n");
+		return ret;
 	}else{
 		int addr = BUFFER_SIZE - 1;
 		int i;
@@ -262,6 +374,7 @@ void execute(int linenum, char* cmd, char num){
 				}
 			}
 		}
+		return 0;
 	}
 }
 
@@ -312,7 +425,10 @@ void basic(void){
 			if(num == 1 && strnum(linebuf) == 0){
 				putstr("! Line number 0 is illegal\r\n");
 			}else{
-				execute(num == 1 ? strnum(linebuf) : -1, cmd == linebuf ? "" : cmd, num);
+				int ret = execute(num == 1 ? strnum(linebuf) : -1, (num == 1 && cmd == linebuf) ? "" : cmd, num);
+				if(ret == -1){
+					putstr("! Break\r\n");
+				}
 			}
 
 skip:
