@@ -383,12 +383,18 @@ void basic(void){
 	int i;
 	clear();
 
+#ifdef SMALL
+	putstr("Krakow BASIC  Ver. ");
+	putstr(VERSION);
+	putstr("\r\n\r\n");
+#else
 	putstr(PLATFORM);
 	putstr("   Krakow BASIC V");
 	putstr(VERSION);
 	putstr("\r\n");
 	putstr("Copyright 2024 by: Nishi.\r\n");
 	putstr("                   penguin2233.\r\n\r\n ");
+#endif
 	putnum(BUFFER_SIZE);
 	putstr(" bytes free\r\n");
 	putstr("\r\n");
