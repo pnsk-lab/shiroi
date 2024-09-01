@@ -7,6 +7,7 @@
 #include "mem.h"
 #include "char.h"
 
+#define VERSION "0.0"
 #define LINE_BUFFER_SIZE 512
 #define BUFFER_SIZE (1024 * 24)
 
@@ -379,14 +380,19 @@ int execute(int linenum, char* cmd, char num){
 }
 
 void basic(void){
+	int i;
 	clear();
 
-	putstr("Shiroi Microcomputer BASIC\r\n");
-	putstr("Copyright 2024 by Nishi\r\n");
+	putstr(PLATFORM);
+	putstr("   Krakow BASIC V");
+	putstr(VERSION);
+	putstr("\r\n");
+	putstr("Copyright 2024 by: Nishi.\r\n");
+	putstr("                   penguin2233.\r\n\r\n ");
 	putnum(BUFFER_SIZE);
 	putstr(" bytes free\r\n");
+	putstr("\r\n");
 
-	int i;
 	for(i = 0; i < BUFFER_SIZE; i++){
 		basicbuffer[i] = 0;
 	}
