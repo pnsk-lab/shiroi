@@ -1,11 +1,78 @@
 /* $Id$ */
 
+#if defined(PLATFORM_SHIROI)
+
 #include "dri/text.h"
 #include "dri/video.h"
 #include "dri/math.h"
 
 #include "mem.h"
 #include "char.h"
+#define PLATFORM "Shiroi"
+#define NEWLINE "\r\n"
+#define BREAKKEY
+
+#elif defined(PLATFORM_UNIX)
+
+#define mull(x,y) ((x)*(y))
+#define divl(x,y) ((x)/(y))
+#define killcursor(x)
+#define cursor(x)
+#define strnum atoi
+#define PLATFORM "Unix"
+#define NEWLINE "\n"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
+#include <termios.h>
+
+char agetch(void){
+	int c = getchar();
+	if(c == EOF) return -1;
+	if(c == '\r') return '\n';
+	return c;
+}
+
+bool strcaseequ(const char* a, const char* b){
+	return strcasecmp(a, b) == 0;
+}
+
+void change_color(int a){
+}
+
+void putnum(int n){
+	printf("%d", n);
+	fflush(stdout);
+}
+
+void putstr(const char* n){
+	printf("%s", n);
+	fflush(stdout);
+}
+
+void clear(void){
+	printf("\x1b[2J");
+	fflush(stdout);
+}
+
+void basic(void);
+
+int main(){
+	struct termios old, new;
+	tcgetattr(0, &old);
+	new = old;
+	new.c_lflag &= ~(ECHO | ICANON);
+	tcsetattr(0, TCSANOW, &new);
+	basic();
+	tcsetattr(0, TCSANOW, &old);
+}
+
+#else
+#error "Define PLATFORM_*"
+#endif
 
 #define VERSION "0.0"
 #define LINE_BUFFER_SIZE 512
@@ -84,7 +151,9 @@ redo:
 }
 
 int run(char* cmd, int linenum, char num, int* lgoto){
+#ifdef BREAKKEY
 	if(agetch() == 1) return -1;
+#endif
 	char line[LINE_BUFFER_SIZE];
 	char rcmd[32];
 	int i;
@@ -104,7 +173,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 					putstr(" in line ");
 					putnum(linenum);
 				}
-				putstr("\r\n");
+				putstr(NEWLINE);
 				return 1;
 			}
 			rcmd[incr] = 0;
@@ -131,7 +200,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 				putstr(" in line ");
 				putnum(linenum);
 			}
-			putstr("\r\n");
+			putstr(NEWLINE);
 			return 1;
 		}
 		int bgcolor = 0;
@@ -144,7 +213,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 				putstr(" in line ");
 				putnum(linenum);
 			}
-			putstr("\r\n");
+			putstr(NEWLINE);
 			return 1;
 		}else if(ret0 == -1){
 			putstr("! Syntax error");
@@ -152,7 +221,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 				putstr(" in line ");
 				putnum(linenum);
 			}
-			putstr("\r\n");
+			putstr(NEWLINE);
 			return 1;
 		}
 		if(ret1 == 1){
@@ -163,7 +232,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 				putstr(" in line ");
 				putnum(linenum);
 			}
-			putstr("\r\n");
+			putstr(NEWLINE);
 			return 1;
 		}else if(ret1 == -1){
 			putstr("! Syntax error");
@@ -171,7 +240,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 				putstr(" in line ");
 				putnum(linenum);
 			}
-			putstr("\r\n");
+			putstr(NEWLINE);
 			return 1;
 		}
 	}else if(num == 0 && strcaseequ(rcmd, "LIST")){
@@ -197,7 +266,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 			putnum(lbuf[i]);
 			putstr(" ");
 			putstr(basicbuffer + shift[i]);
-			putstr("\r\n");
+			putstr(NEWLINE);
 		}
 	}else if(num == 1 && strcaseequ(rcmd, "GOTO")){
 		int ret = pexpr(arg, 0, lgoto);
@@ -207,7 +276,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 				putstr(" in line ");
 				putnum(linenum);
 			}
-			putstr("\r\n");
+			putstr(NEWLINE);
 			return 1;
 		}else if(ret == -1){
 			putstr("! Syntax error");
@@ -215,7 +284,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 				putstr(" in line ");
 				putnum(linenum);
 			}
-			putstr("\r\n");
+			putstr(NEWLINE);	
 			return 1;
 		}
 	}else if(num == 0 && strcaseequ(rcmd, "RUN")){
@@ -257,7 +326,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 						putstr(" in line ");
 						putnum(linenum);
 					}
-					putstr("\r\n");
+					putstr(NEWLINE);
 					return 1;
 				}
 			}
@@ -268,7 +337,7 @@ int run(char* cmd, int linenum, char num, int* lgoto){
 			putstr(" in line ");
 			putnum(linenum);
 		}
-		putstr("\r\n");
+		putstr(NEWLINE);
 		return 1;
 	}
 	return 0;
@@ -386,23 +455,29 @@ void basic(void){
 #ifdef SMALL
 	putstr("Krakow BASIC  Ver. ");
 	putstr(VERSION);
-	putstr("\r\n\r\n");
+	putstr(NEWLINE);
+	putstr(NEWLINE);
 #else
 	putstr(PLATFORM);
 	putstr("   Krakow BASIC V");
 	putstr(VERSION);
 	putstr("\r\n");
 	putstr("Copyright 2024 by: Nishi.\r\n");
-	putstr("                   penguin2233.\r\n\r\n ");
+	putstr("                   penguin2233.");
+	putstr(NEWLINE);
+	putstr(NEWLINE);
+	putstr(" ");
 #endif
 	putnum(BUFFER_SIZE);
-	putstr(" bytes free\r\n");
-	putstr("\r\n");
+	putstr(" bytes free");
+	putstr(NEWLINE);
+	putstr(NEWLINE);
 
 	for(i = 0; i < BUFFER_SIZE; i++){
 		basicbuffer[i] = 0;
 	}
-	putstr("Ready\r\n");
+	putstr("Ready");
+	putstr(NEWLINE);
 
 	cursor();
 	linebuf[0] = 0;
@@ -411,11 +486,12 @@ void basic(void){
 		char c = agetch();
 		if(c != 0) killcursor();
 		if(c == 1){
-			putstr("Break\r\n");
+			putstr("Break");
+			putstr(NEWLINE);
 			lineind = 0;
 		}else if(c == '\n'){
 			linebuf[lineind] = 0;
-			putstr("\r\n");
+			putstr(NEWLINE);
 			if(lineind == 0) goto skip;
 
 			int i;
@@ -435,11 +511,13 @@ void basic(void){
 			}
 
 			if(num == 1 && strnum(linebuf) == 0){
-				putstr("! Line number 0 is illegal\r\n");
+				putstr("! Line number 0 is illegal");
+				putstr(NEWLINE);
 			}else{
 				int ret = execute(num == 1 ? strnum(linebuf) : -1, (num == 1 && cmd == linebuf) ? "" : cmd, num);
 				if(ret == -1){
-					putstr("! Break\r\n");
+					putstr("! Break");
+					putstr(NEWLINE);
 				}
 			}
 
@@ -450,6 +528,8 @@ skip:
 				putstr("\x08 \x08");
 				lineind--;
 			}
+		}else if(c == -1){
+			break;
 		}else if(c != 0){
 			putchar(c);
 			linebuf[lineind++] = c;

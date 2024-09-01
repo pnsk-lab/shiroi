@@ -30,7 +30,7 @@ io.rel: io.asm
 
 .c.rel:
 	mkdir -p Discard
-	sdcc -DPLATFORM=\"Shiroi\" -DONLY_VDP -c -mz80 -o $@ --no-std-crt0 --nostdinc --nostdlib $<
+	sdcc -DPLATFORM_SHIROI -DONLY_VDP -c -mz80 -o $@ --no-std-crt0 --nostdinc --nostdlib $<
 	rm -f "`echo $< | sed -E 's/\.c$$/.asm/g'`" "`echo $< | sed -E 's/\.c$$/.sym/g'`" "`echo $< | sed -E 's/\.c$$/.lst/g'`"
 
 Discard/font.ihx: font.asm
