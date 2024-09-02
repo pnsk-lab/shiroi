@@ -12,7 +12,7 @@
 #define NEWLINE "\r\n"
 #define BREAKKEY
 
-#elif defined(PLATFORM_UNIX)
+#elif defined(PLATFORM_UNIX) || defined(PLATFORM_WINDOWS)
 
 #define mull(x,y) ((x)*(y))
 #define divl(x,y) ((x)/(y))
@@ -27,12 +27,27 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+
+#ifdef __MINGW32__
+#include <conio.h>
+#include <windows.h>
+#else
 #include <termios.h>
+#endif
 
 char agetch(void){
+#ifdef __MINGW32__
+	int c;
+rescan:
+	c = _getch();
+	if(c == '\r') return '\n';
+	if(c == '\n') goto rescan;
+	return c;
+#else
 	int c = getchar();
 	if(c == EOF) return -1;
 	if(c == '\r') return '\n';
+#endif
 	return c;
 }
 
@@ -61,13 +76,26 @@ void clear(void){
 void basic(void);
 
 int main(){
+#ifdef __MINGW32__
+	HANDLE winstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD mode = 0;
+	GetConsoleMode(winstdout, &mode);
+	const DWORD origmode = mode;
+	mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	SetConsoleMode(winstdout, mode);
+#else
 	struct termios old, new;
 	tcgetattr(0, &old);
 	new = old;
 	new.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &new);
+#endif
 	basic();
+#ifdef __MINGW32__
+	SetConsoleMode(winstdout, origmode);
+#else
 	tcsetattr(0, TCSANOW, &old);
+#endif
 }
 
 #else
