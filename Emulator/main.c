@@ -166,6 +166,7 @@ int main(int argc, char** argv) {
 	} else {
 		InitWindow(640 + ((debug == NULL && text == NULL) ? 0 : 200), 480, "Shiroi Emulator");
 	}
+	SetExitKey(KEY_NULL);
 	InitAudioDevice();
 	SetAudioStreamBufferSizeDefault(512);
 	AudioStream as = LoadAudioStream(48000, 16, 1);

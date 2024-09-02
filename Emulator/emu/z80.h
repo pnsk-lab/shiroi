@@ -316,10 +316,10 @@ extern "C" {
 #define Z80_PIN_MASK ((1ULL << 40) - 1)
 
 // pin access helper macros
-#define Z80_MAKE_PINS(ctrl, addr, data) ((ctrl) | ((data & 0xFF) << 16) | ((addr) & 0xFFFFULL))
+#define Z80_MAKE_PINS(ctrl, addr, data) ((ctrl) | ((data & 0xFF) << 16) | ((addr)&0xFFFFULL))
 #define Z80_GET_ADDR(p) ((uint16_t)(p))
 #define Z80_SET_ADDR(p, a) \
-	{ p = ((p) & ~0xFFFF) | ((a) & 0xFFFF); }
+	{ p = ((p) & ~0xFFFF) | ((a)&0xFFFF); }
 #define Z80_GET_DATA(p) ((uint8_t)((p) >> 16))
 #define Z80_SET_DATA(p, d) \
 	{ p = ((p) & ~0xFF0000ULL) | (((d) << 16) & 0xFF0000ULL); }
@@ -7611,7 +7611,7 @@ fetch_next:
 	pins = _z80_fetch(cpu, pins);
 step_next:
 	cpu->step += 1;
-track_int_bits: {
+track_int_bits : {
 	// track NMI 0 => 1 edge and current INT pin state, this will track the
 	// relevant interrupt status up to the last instruction cycle and will
 	// be checked in the first M1 cycle (during _fetch)
