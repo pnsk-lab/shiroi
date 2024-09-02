@@ -353,9 +353,9 @@ int main(int argc, char** argv) {
 
 		EndDrawing();
 	}
+	if(video != NULL) UnloadRenderTexture(r);
 	CloseWindow();
 	UnloadAudioStream(as);
-	if(video != NULL) UnloadRenderTexture(r);
 	shiroi.stop = true;
 	thread_end();
 }
