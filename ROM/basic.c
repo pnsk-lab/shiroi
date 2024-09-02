@@ -69,8 +69,12 @@ void putstr(const char* n){
 }
 
 void clear(void){
+#ifdef __MINGW32__
+	system("cls");
+#else
 	printf("\x1b[2J\x1b[1;1H");
 	fflush(stdout);
+#endif
 }
 
 void basic(void);
