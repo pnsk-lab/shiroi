@@ -21,7 +21,7 @@ rom: ./ROM
 	$(MAKE) -C $@ $(FLAGS)
 
 format:
-	clang-format --verbose -i `find Emulator -name "*.c" -or -name "*.h"`
+	clang-format --verbose -i `find Emulator -name "*.c" -or -name "*.h"` ROM/basic.c
 
 clean:
 	$(MAKE) -C ./Emulator $(FLAGS) clean
