@@ -1,5 +1,6 @@
 #!/bin/sh
 # $Id$
+
 avr-gcc -DPLATFORM_ARDUINO -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o arduino.o ../ROM/basic.c || exit 1
 avr-gcc -mmcu=atmega328p arduino.o -o arduino || exit 1
 rm arduino.o
