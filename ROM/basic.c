@@ -51,7 +51,7 @@
 #include <util/setbaud.h>
 #define BUFFER_SIZE (1024)
 #define LINE_BUFFER_SIZE (128)
-#define LINES (128)
+#define LINES (32)
 #undef putchar
 #define putchar uart_putchar
 #elif defined(PLATFORM_UNIX)
