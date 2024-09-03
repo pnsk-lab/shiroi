@@ -1,5 +1,7 @@
 /* $Id$ */
 
+/* Krakow BASIC - Multi-platform simple BASIC */
+
 #if defined(PLATFORM_SHIROI)
 
 #include "dri/text.h"
@@ -48,7 +50,7 @@
 #include <util/delay.h>
 #include <util/setbaud.h>
 #define BUFFER_SIZE (1024)
-#define LINE_BUFFER_SIZE (512)
+#define LINE_BUFFER_SIZE (128)
 #define LINES (128)
 #undef putchar
 #define putchar uart_putchar
@@ -89,11 +91,9 @@ rescan:
 #elif defined(PLATFORM_ARDUINO)
 	int c;
 rescan:
-	while(!(UCSR0A & _BV(RXC0)));
+	if(!(UCSR0A & _BV(RXC0))) return 0;
 	c = UDR0;
-	if(c == '\r') {
-		return '\n';
-	}
+	if(c == '\r') return '\n';
 	if(c == '\n') goto rescan;
 	return c;
 #endif
@@ -111,8 +111,8 @@ void putstr(const char* n) {
 }
 
 void putnum(int n) {
-	char buf[128];
-	int incr = 127;
+	char buf[64];
+	int incr = 63;
 	buf[incr--] = 0;
 	while(1) {
 		buf[incr--] = (n % 10) + '0';
@@ -134,15 +134,28 @@ void putstr(const char* n) {
 #endif
 
 void change_color(int a) {
-	return;
+	int fg = (a >> 4) & 0xf;
+	int bg = (a & 0xf);
+	if(!(0 <= fg && fg <= 15)) return;
+	if(!(0 <= bg && bg <= 15)) return;
 	char color[2];
 	color[1] = 0;
-	color[0] = ((a >> 4) & 0xf) + '0';
-	putstr("\x1b[4");
+	if(bg < 8){
+		color[0] = bg + '0';
+		putstr("\x1b[4");
+	}else{
+		color[0] = (bg - 8) + '0';
+		putstr("\x1b[10");
+	}
 	putstr(color);
 	putstr("m");
-	color[0] = (a & 0xf) + '0';
-	putstr("\x1b[3");
+	if(fg < 8){
+		color[0] = fg + '0';
+		putstr("\x1b[3");
+	}else{
+		color[0] = (fg - 8) + '0';
+		putstr("\x1b[9");
+	}
 	putstr(color);
 	putstr("m");
 	putstr("\x1b[2J\x1b[1;1H");
@@ -214,10 +227,10 @@ int pexpr(char* expr, char* buffer, int* number) {
 	int start = 0;
 	int br = 0;
 	int result = 0;
-	int stack[128];
+	int stack[32];
 	int sp = 0;
 	char put = 0;
-	for(i = 0; i < 128; i++) stack[i] = 0;
+	for(i = 0; i < 32; i++) stack[i] = 0;
 	for(i = 0;; i++) {
 		if(ownbuf[i] == 0) {
 			break;
@@ -650,10 +663,10 @@ void basic(void) {
 
 		skip:
 			lineind = 0;
-		} else if(c == 0x8) {
+		} else if(c == 0x8 || c == 0x7f) {
 			if(lineind > 0) {
 				putstr("\x08 \x08");
-				lineind--;
+				linebuf[--lineind] = 0;
 			}
 		} else if(c == -1) {
 			break;
