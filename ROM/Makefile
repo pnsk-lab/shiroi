@@ -39,4 +39,4 @@ Discard/font.ihx: font.asm
 	sdldz80 -i $@ Discard/font.rel
 
 clean:
-	rm -rf Discard *.o *.bin *.rom *.rel */*.rel
+	rm -rf Discard *.o *.bin *.rom *.rel */*.rel basic.c
