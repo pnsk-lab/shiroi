@@ -29,6 +29,7 @@
 #elif defined(PLATFORM_ARDUINO)
 #define PLATFORM "Arduino"
 #define NEWLINE "\r\n"
+#define BREAKKEY
 #endif
 
 #ifndef NEWLINE
@@ -95,6 +96,7 @@ rescan:
 	c = UDR0;
 	if(c == '\r') return '\n';
 	if(c == '\n') goto rescan;
+	if(c == 3) return 1;
 	return c;
 #endif
 	return c;
