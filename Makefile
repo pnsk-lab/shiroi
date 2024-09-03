@@ -7,9 +7,12 @@ FLAGS= PWD=$(PWD) PLATFORM=$(PLATFORM)
 
 include Platform/$(PLATFORM).mk
 
-.PHONY: all clean emulator rom ./Emulator ./ROM format
+.PHONY: all fetch clean emulator rom ./Emulator ./ROM format
 
 all: emulator rom
+
+fetch:
+	wget -O ROM/basic.c http://svn.nishi.boats/repo/krakow/trunk/BASIC/basic.c
 
 emulator: ./Emulator
 rom: ./ROM

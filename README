@@ -1,5 +1,7 @@
 Shiroi is a 8-bit (maybe 16-bit) microcomputer project
 
+Use `make fetch` to get the default BASIC interpreter.
+
 This repository includes the emulator ; it is powered by:
 1. chips: https://github.com/floooh/chips
 2. vrEmuTms9918: https://github.com/visrealm/vrEmuTms9918
