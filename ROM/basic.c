@@ -606,6 +606,14 @@ void basic(void) {
 	putstr("                   penguin2233.");
 	putstr(NEWLINE);
 	putstr(NEWLINE);
+	putstr(" Max ");
+	putnum(LINE_BUFFER_SIZE);
+	putstr(" characters per line");
+	putstr(NEWLINE);
+	putstr(" Max ");
+	putnum(LINES);
+	putstr(" lines");
+	putstr(NEWLINE);
 	putstr(" ");
 #endif
 	putnum(BUFFER_SIZE);
