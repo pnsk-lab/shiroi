@@ -50,6 +50,8 @@
 #define BUFFER_SIZE (1024)
 #define LINE_BUFFER_SIZE (512)
 #define LINES (128)
+#undef putchar
+#define putchar uart_putchar
 #elif defined(PLATFORM_UNIX)
 #include <termios.h>
 #endif
@@ -87,22 +89,18 @@ rescan:
 #elif defined(PLATFORM_ARDUINO)
 	int c;
 rescan:
-	while(!(UCSR0A & _BV(RXC0)))
-		;
+	while(!(UCSR0A & _BV(RXC0)));
 	c = UDR0;
 	if(c == '\r') {
 		return '\n';
 	}
 	if(c == '\n') goto rescan;
-	uart_putchar(c);
 	return c;
 #endif
 	return c;
 }
 
 bool strcaseequ(const char* a, const char* b) { return strcasecmp(a, b) == 0; }
-
-void change_color(int a) {}
 
 #if defined(PLATFORM_ARDUINO)
 void putstr(const char* n) {
@@ -135,14 +133,26 @@ void putstr(const char* n) {
 }
 #endif
 
+void change_color(int a) {
+	return;
+	char color[2];
+	color[1] = 0;
+	color[0] = ((a >> 4) & 0xf) + '0';
+	putstr("\x1b[4");
+	putstr(color);
+	putstr("m");
+	color[0] = (a & 0xf) + '0';
+	putstr("\x1b[3");
+	putstr(color);
+	putstr("m");
+	putstr("\x1b[2J\x1b[1;1H");
+}
+
 void clear(void) {
 #if defined(PLATFORM_WINDOWS)
 	system("cls");
-#elif defined(PLATFORM_UNIX)
-	printf("\x1b[2J\x1b[1;1H");
-	fflush(stdout);
-#elif defined(PLATFORM_ARDUINO)
-	putstr("\x1b[2J\x1b[1;1H");
+#elif defined(PLATFORM_UNIX) || defined(PLATFORM_ARDUINO)
+	putstr("\x1b[0m\x1b[2J\x1b[1;1H");
 #endif
 }
 
@@ -164,6 +174,8 @@ int main() {
 	tcsetattr(0, TCSANOW, &new);
 #elif defined(PLATFORM_ARDUINO)
 	uart_init();
+	DDRB |= _BV(DDB5);
+	PORTB |= _BV(PORT5);
 #endif
 	basic();
 #if defined(PLATFORM_WINDOWS)
